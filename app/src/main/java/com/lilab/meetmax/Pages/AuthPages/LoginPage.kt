@@ -2,6 +2,7 @@ package com.lilab.meetmax.Pages.AuthPages
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
@@ -54,6 +56,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.lilab.meetmax.Pages.AppComponent.Header
+import com.lilab.meetmax.Pages.AppComponent.StaticSection
 import com.lilab.meetmax.R
 import com.lilab.meetmax.ViewModel.AuthViewModel
 import com.lilab.meetmax.ui.theme.LightColorScheme
@@ -64,214 +68,27 @@ fun LoginPage(modifier: Modifier = Modifier, navController: NavController, authV
 
 
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-
+    Surface(
+        modifier = modifier.fillMaxSize()
+            .background(Color.White)
+            .padding(24.dp)
     ) {
-
-
-        Header()
-        StaticSection()
-        MiddleSection() // functional section
-
-
-
-    }
-}
-
-
-
-
-@Composable
-fun Header(){
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, top = 34.dp, end = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-
-
-
-        Row(
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.app_logo),
-                contentDescription = "App Icon",
-                modifier = Modifier
-                    .height(21.dp)
-                    .width(21.dp)
-                    .align(Alignment.CenterVertically)
-            )
-            Spacer(modifier = Modifier.padding(start = 4.dp))
-            Text(
-                text = "MeetMax",
-                fontFamily = FontFamily(Font(R.font.rbold, FontWeight.Bold)),
-                fontSize = 16.sp,
-                color = LightColorScheme.tertiary
-            )
-
-        }
-
-
-        Card(
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 2.dp,
-            ),
-
-            //redious
-            shape = RoundedCornerShape(2.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = LightColorScheme.background 
-            ),
-            modifier = Modifier
-                .width(126.dp)
-                .height(32.dp),
-
-
-
-
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "English (UK)",
-                    fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Normal)),
-                    fontSize = 13.sp,
-                    color = LightColorScheme.tertiary
-                )
-                Spacer(modifier = Modifier.padding(4.dp))
-                Image(
-                    painter = painterResource(id = R.drawable.angle_down),
-                    contentDescription = "Angle Down Icon"
-                )
-            }
-        }
-    }
-
-}
-
-@Composable
-fun StaticSection(){
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 30.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
-            Text(
-                text = "Sign In",
-                fontFamily = FontFamily(Font(R.font.rbold, FontWeight.Bold)),
-                fontSize = 24.sp,
-                lineHeight = 37.sp,
-                color = LightColorScheme.tertiary
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Welcome Back! You've been missed!",
-                fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
-                fontSize = 19.sp,
-                lineHeight = 29.sp,
-                color = LightColorScheme.tertiary
-
-            )
-
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Card(
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 2.dp,
-                ),
-                shape = RoundedCornerShape(3.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = LightColorScheme.background
-                ),
-
+            modifier = modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .background(Color.White),
 
             ) {
-                Row(
-                    modifier = Modifier.padding(8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
-                    Image(
-                        painter = painterResource(id = R.drawable.google),
-                        contentDescription = "Angle Down Icon"
-                    )
-                    Spacer(modifier = Modifier.padding(let { 4.dp }))
-                    Text(
-                        text = "Log in with Google",
-                        fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
-                        fontSize = 16.sp,
-                        color = LightColorScheme.tertiary
-                    )
 
 
-                }
-            }
-
-            Card(
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 1.dp,
-                ),
-                shape = RoundedCornerShape(3.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = LightColorScheme.background // Set the card background color here
-                ),
-
-            ) {
-                Row(
-                    modifier = Modifier.padding(8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-
-                ) {
-
-                    Image(
-                        painter = painterResource(id = R.drawable.apple),
-                        contentDescription = "Angle Down Icon"
-                    )
-                    Spacer(modifier = Modifier.padding(let { 4.dp }))
-                    Text(
-                        text = "Log in with Apple",
-                        fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
-                        fontSize = 16.sp,
-                        color = LightColorScheme.tertiary
-                    )
+            Header()
+            StaticSection(title = "Sign In", subtitle = "Welcome Back! You've been missed!" , newlineTex = "")
+            MiddleSection() // functional section
 
 
-                }
-            }
+
         }
-
-
     }
 
 }
@@ -293,7 +110,7 @@ fun MiddleSection(){
 
     var checked by remember { mutableStateOf(false) }
     Column(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier.padding(top = 20.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
