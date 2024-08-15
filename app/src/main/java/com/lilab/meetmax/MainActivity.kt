@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         setContent {
            MeetmaxTheme {
                Scaffold(modifier = Modifier.fillMaxSize()) {innerPadding ->
-                   MyAppNavigation(modifier = Modifier.padding(innerPadding), authViewModel = authViewModel)
+                   MyAppNavigation(modifier = Modifier.padding(innerPadding))
 
                }
            }

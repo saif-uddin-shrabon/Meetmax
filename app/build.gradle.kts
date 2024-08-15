@@ -1,16 +1,18 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.kotlin.serialization)
+    id("kotlin-parcelize")
 }
 
 android {
     namespace = "com.lilab.meetmax"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.lilab.meetmax"
         minSdk = 25
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -72,6 +74,9 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.2.1")
     implementation("androidx.compose.material:material-icons-extended-android:1.6.8")
     implementation("androidx.compose.ui:ui-text:1.6.8")
+    implementation(libs.kotlinx.serialization.json)
+
+
 
 
 }

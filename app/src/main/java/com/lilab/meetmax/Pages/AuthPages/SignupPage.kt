@@ -73,7 +73,7 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun SignupPage(modifier: Modifier = Modifier, navController: NavController, authViewModel: AuthViewModel) {
+fun SignupPage(modifier: Modifier = Modifier, onsigninClick: () -> Unit) {
     Surface(
         modifier = modifier
             .fillMaxSize()
@@ -92,7 +92,7 @@ fun SignupPage(modifier: Modifier = Modifier, navController: NavController, auth
             // Header & StaticSection from AppComponent
             Header()
             StaticSection(title = "Getting Started", subtitle = "Create an account to continue and", newlineTex = "connect with the people.")
-            SignpuFuntionalSection()
+            SignpuFuntionalSection(onsigninClick = onsigninClick) // functional section
 
 
 
@@ -101,7 +101,7 @@ fun SignupPage(modifier: Modifier = Modifier, navController: NavController, auth
 }
 
 @Composable
-fun SignpuFuntionalSection(){
+fun SignpuFuntionalSection(onsigninClick: () -> Unit) {
     var email by remember {
         mutableStateOf("")
     }
@@ -244,7 +244,7 @@ fun SignpuFuntionalSection(){
             Text(text = "Already have an account? ", fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
                 fontSize = 16.sp,
                 color = LightColorScheme.tertiary)
-            TextButton(onClick = {  }) {
+            TextButton(onClick = onsigninClick) {
                 Text(text = "Sign In", fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
                     fontSize = 16.sp,
                     color = LightColorScheme.secondary)
@@ -324,7 +324,7 @@ fun convertMillisToDate(millis: Long): String {
 
 @Composable
 fun GenderSelectionRow() {
-    var selectedGender by remember {   // Geneder selection variable
+    var selectedGender by remember {   // Gender selection variable
         mutableStateOf("Male")
     }
     Card(
@@ -394,11 +394,11 @@ fun GenderSelectionRow() {
 }
 
 
-@Preview(showBackground = true, widthDp = 360, heightDp = 640)
-@Composable
-fun SignupLayout() {
-    val mockNavController = rememberNavController()
-    val mockAuthViewModel = AuthViewModel()
-
-    SignupPage(navController = mockNavController, authViewModel = mockAuthViewModel)
-}
+//@Preview(showBackground = true, widthDp = 360, heightDp = 640)
+//@Composable
+//fun SignupLayout() {
+//    val mockNavController = rememberNavController()
+//    val mockAuthViewModel = AuthViewModel()
+//
+//    SignupPage(navController = mockNavController, authViewModel = mockAuthViewModel)
+//}

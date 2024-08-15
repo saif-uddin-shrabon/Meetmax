@@ -64,7 +64,7 @@ import com.lilab.meetmax.ui.theme.LightColorScheme
 
 
 @Composable
-fun LoginPage(modifier: Modifier = Modifier, navController: NavController, authViewModel: AuthViewModel) {
+fun LoginPage(modifier: Modifier = Modifier, onSignupClick: () -> Unit, onForgetPassClick: () -> Unit) {
 
 
 
@@ -84,7 +84,10 @@ fun LoginPage(modifier: Modifier = Modifier, navController: NavController, authV
 
             Header()
             StaticSection(title = "Sign In", subtitle = "Welcome Back! You've been missed!" , newlineTex = "")
-            MiddleSection() // functional section
+            MiddleSection(
+                onSignupClick = onSignupClick,
+                onForgetPassClick = onForgetPassClick
+            ) // functional section
 
 
 
@@ -95,7 +98,10 @@ fun LoginPage(modifier: Modifier = Modifier, navController: NavController, authV
 
 
 @Composable
-fun MiddleSection(){
+fun MiddleSection(
+    onSignupClick: () -> Unit,
+    onForgetPassClick: () -> Unit
+) {
     var email by remember {
         mutableStateOf("")
     }
@@ -149,7 +155,7 @@ fun MiddleSection(){
             },
             leadingIcon = {
                 Icon(
-                    painter = painterResource(id = R.drawable.lock), // Replace with your password icon
+                    painter = painterResource(id = R.drawable.lock),
                     contentDescription = "Password Icon",
                     tint = Color.Gray
                 )
@@ -205,7 +211,7 @@ fun MiddleSection(){
             }
 
 
-            TextButton(onClick = {  },) {
+            TextButton(onClick = onForgetPassClick) {
                 Text(text = "Forget Password?", fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
                     fontSize = 16.sp,
                     color = LightColorScheme.tertiary)
@@ -242,7 +248,7 @@ fun MiddleSection(){
             Text(text = "Don't have an account? ", fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
                 fontSize = 16.sp,
                 color = LightColorScheme.tertiary)
-            TextButton(onClick = {  }) {
+            TextButton(onClick = onSignupClick) {
                 Text(text = "Sign up", fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
                     fontSize = 16.sp,
                    color = LightColorScheme.secondary)
@@ -254,12 +260,12 @@ fun MiddleSection(){
     }
 }
 
-//@PreviewScreenSizes
+
 @Preview(showBackground = true, widthDp = 360, heightDp = 640)
 @Composable
 fun LoginPagePreview() {
-    val mockNavController = rememberNavController()
-    val mockAuthViewModel = AuthViewModel()
-
-    LoginPage(navController = mockNavController, authViewModel = mockAuthViewModel)
+    LoginPage(
+        onSignupClick = {},
+        onForgetPassClick = {}
+    )
 }
