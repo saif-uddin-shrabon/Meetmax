@@ -58,18 +58,23 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.lilab.meetmax.Pages.AppComponent.Header
 import com.lilab.meetmax.Pages.AppComponent.StaticSection
+import com.lilab.meetmax.Pages.Navigation.Destination
 import com.lilab.meetmax.R
 import com.lilab.meetmax.ViewModel.AuthViewModel
 import com.lilab.meetmax.ui.theme.LightColorScheme
 
 
 @Composable
-fun LoginPage(modifier: Modifier = Modifier, onSignupClick: () -> Unit, onForgetPassClick: () -> Unit) {
+fun LoginPage(
+    modifier: Modifier = Modifier,
+    navController: NavController
+) {
 
 
 
     Surface(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
             .background(Color.White)
             .padding(24.dp)
     ) {
@@ -85,8 +90,7 @@ fun LoginPage(modifier: Modifier = Modifier, onSignupClick: () -> Unit, onForget
             Header()
             StaticSection(title = "Sign In", subtitle = "Welcome Back! You've been missed!" , newlineTex = "")
             MiddleSection(
-                onSignupClick = onSignupClick,
-                onForgetPassClick = onForgetPassClick
+                navController = navController
             ) // functional section
 
 
@@ -99,8 +103,7 @@ fun LoginPage(modifier: Modifier = Modifier, onSignupClick: () -> Unit, onForget
 
 @Composable
 fun MiddleSection(
-    onSignupClick: () -> Unit,
-    onForgetPassClick: () -> Unit
+    navController: NavController
 ) {
     var email by remember {
         mutableStateOf("")
@@ -211,7 +214,13 @@ fun MiddleSection(
             }
 
 
-            TextButton(onClick = onForgetPassClick) {
+            TextButton(onClick = {
+                navController.navigate(Destination.ForgetPassword){
+                    popUpTo(Destination.Login){
+                        inclusive = true
+                    }
+                }
+            }) {
                 Text(text = "Forget Password?", fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
                     fontSize = 16.sp,
                     color = LightColorScheme.tertiary)
@@ -222,7 +231,14 @@ fun MiddleSection(
 
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { },
+            onClick = {
+                navController.navigate(Destination.MainScreen){
+                    popUpTo(Destination.Login){
+                        inclusive = true
+                    }
+                }
+
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
@@ -248,7 +264,14 @@ fun MiddleSection(
             Text(text = "Don't have an account? ", fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
                 fontSize = 16.sp,
                 color = LightColorScheme.tertiary)
-            TextButton(onClick = onSignupClick) {
+            TextButton(onClick = {
+                navController.navigate(Destination.Signup){
+                    popUpTo(Destination.Login){
+                        inclusive = true
+                    }
+                }
+
+            }) {
                 Text(text = "Sign up", fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
                     fontSize = 16.sp,
                    color = LightColorScheme.secondary)
@@ -261,11 +284,10 @@ fun MiddleSection(
 }
 
 
-@Preview(showBackground = true, widthDp = 360, heightDp = 640)
-@Composable
-fun LoginPagePreview() {
-    LoginPage(
-        onSignupClick = {},
-        onForgetPassClick = {}
-    )
-}
+//@Preview(showBackground = true, widthDp = 360, heightDp = 640)
+//@Composable
+//fun LoginPagePreview() {
+//    LoginPage(
+//
+//    )
+//}

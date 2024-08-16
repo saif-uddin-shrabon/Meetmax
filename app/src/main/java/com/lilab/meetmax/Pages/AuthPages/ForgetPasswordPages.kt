@@ -51,12 +51,13 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.lilab.meetmax.Pages.AppComponent.Header
 import com.lilab.meetmax.Pages.AppComponent.StaticSection
+import com.lilab.meetmax.Pages.Navigation.Destination
 import com.lilab.meetmax.R
 import com.lilab.meetmax.ViewModel.AuthViewModel
 import com.lilab.meetmax.ui.theme.LightColorScheme
 
 @Composable
-fun ForgetPasswordPage(modifier: Modifier = Modifier,onForgetPassword: () -> Unit = {}) {
+fun ForgetPasswordPage(modifier: Modifier = Modifier,navController: NavController) {
     Surface(
         modifier = modifier
             .fillMaxSize()
@@ -78,14 +79,14 @@ fun ForgetPasswordPage(modifier: Modifier = Modifier,onForgetPassword: () -> Uni
                 id = R.string.forget_password_desc
             ), newlineTex = "")
 
-            ForgetPassFuntionality(onForgetPassword = onForgetPassword)
+            ForgetPassFuntionality(navController = navController)
 
         }
     }
 }
 
 @Composable
-fun ForgetPassFuntionality(onForgetPassword: () -> Unit){
+fun ForgetPassFuntionality(navController: NavController){
     var email by remember {
         mutableStateOf("")
     }
@@ -148,7 +149,13 @@ fun ForgetPassFuntionality(onForgetPassword: () -> Unit){
                     .width(21.dp)
                     .align(Alignment.CenterVertically)
             )
-            TextButton(onClick = onForgetPassword) {
+            TextButton(onClick = {
+                navController.navigate(Destination.Login){
+                    popUpTo(Destination.ForgetPassword){
+                        inclusive = true
+                    }
+                }
+            }) {
                 Text(text = "Back to Sign In", fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
                     fontSize = 16.sp,
                     color = LightColorScheme.secondary)
@@ -161,12 +168,12 @@ fun ForgetPassFuntionality(onForgetPassword: () -> Unit){
 }
 
 //@Preview(showBackground = true, widthDp = 360, heightDp = 640)
-@Composable
-fun ForgetPassLayout() {
-    val mockNavController = rememberNavController()
-    val mockAuthViewModel = AuthViewModel()
-
-    ForgetPasswordPage(
-        onForgetPassword = {}
-    )
-}
+//@Composable
+//fun ForgetPassLayout() {
+//    val mockNavController = rememberNavController()
+//    val mockAuthViewModel = AuthViewModel()
+//
+//    ForgetPasswordPage(
+//        onForgetPassword = {}
+//    )
+//}

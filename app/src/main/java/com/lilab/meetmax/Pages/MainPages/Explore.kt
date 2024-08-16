@@ -10,11 +10,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import com.lilab.meetmax.ViewModel.AuthViewModel
 
 @Composable
-fun HomePage(modifier: Modifier = Modifier) {
+fun Explore(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -23,7 +21,7 @@ fun HomePage(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-           Text(text = "Home Page", color = Color.White, fontSize = 24.sp)
+        Text(text = "Explore", color = Color.White, fontSize = 24.sp)
     }
 
 }

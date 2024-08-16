@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.lilab.meetmax.Pages.AuthPages.ForgetPasswordPage
 import com.lilab.meetmax.Pages.AuthPages.LoginPage
@@ -14,60 +15,38 @@ import com.lilab.meetmax.ViewModel.AuthViewModel
 
 
 @Composable
-fun MyAppNavigation(modifier: Modifier = Modifier) {
+fun MyAppNavigation() {
 
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Destination.Login) {
+    NavHost(navController = navController, startDestination = SubGraph.Auth) {
 
-        composable<Destination.Login> {
-            LoginPage(
-                onSignupClick = {
-                    navController.navigate(Destination.Signup) {
-                        popUpTo(Destination.Login) {
-                            inclusive = true
-                        }
-                    }
-                },
-                onForgetPassClick = {
-                    navController.navigate(Destination.ForgetPassword) {
-                        popUpTo(Destination.Login) {
-                            inclusive = true
-                        }
-                    }
+        navigation<SubGraph.Auth>(startDestination = Destination.Login){
+            composable<Destination.Login> {
+                 LoginPage(navController = navController)
+
                 }
-            )
-        }
 
 
             composable<Destination.Signup> {
+                SignupPage (navController = navController)
 
-
-                SignupPage {
-                    navController.navigate(Destination.Login) {
-                        popUpTo(Destination.Signup) {
-                            inclusive = true
-                        }
-                    }
                 }
             }
 
             composable<Destination.ForgetPassword> {
+                ForgetPasswordPage (navController = navController)
 
-                    ForgetPasswordPage {
-                        navController.navigate(Destination.Login) {
-                            popUpTo(Destination.ForgetPassword) {
-                                inclusive = true
-                            }
-                        }
-                    }
+             }
 
-            }
 
-            composable<Destination.Home> {
-
-            }
+        navigation<SubGraph.App>(startDestination = Destination.MainScreen){
+            composable<Destination.MainScreen> {  }
         }
+
+    }
+
+
     }
 
 

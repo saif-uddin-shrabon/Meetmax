@@ -65,6 +65,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.lilab.meetmax.Pages.AppComponent.Header
 import com.lilab.meetmax.Pages.AppComponent.StaticSection
+import com.lilab.meetmax.Pages.Navigation.Destination
 import com.lilab.meetmax.R
 import com.lilab.meetmax.ViewModel.AuthViewModel
 import com.lilab.meetmax.ui.theme.LightColorScheme
@@ -73,7 +74,7 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun SignupPage(modifier: Modifier = Modifier, onsigninClick: () -> Unit) {
+fun SignupPage(modifier: Modifier = Modifier, navController: NavController) {
     Surface(
         modifier = modifier
             .fillMaxSize()
@@ -92,7 +93,7 @@ fun SignupPage(modifier: Modifier = Modifier, onsigninClick: () -> Unit) {
             // Header & StaticSection from AppComponent
             Header()
             StaticSection(title = "Getting Started", subtitle = "Create an account to continue and", newlineTex = "connect with the people.")
-            SignpuFuntionalSection(onsigninClick = onsigninClick) // functional section
+            SignpuFuntionalSection(navController = navController) // functional section
 
 
 
@@ -101,7 +102,7 @@ fun SignupPage(modifier: Modifier = Modifier, onsigninClick: () -> Unit) {
 }
 
 @Composable
-fun SignpuFuntionalSection(onsigninClick: () -> Unit) {
+fun SignpuFuntionalSection(navController: NavController) {
     var email by remember {
         mutableStateOf("")
     }
@@ -127,12 +128,17 @@ fun SignpuFuntionalSection(onsigninClick: () -> Unit) {
 
         // TextField for Email
         OutlinedTextField(
-            modifier= Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             value = email,
             onValueChange = { email = it },
-            label = { Text(text = "Your Email",fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
-                fontSize = 16.sp,
-                color = LightColorScheme.tertiary) },
+            label = {
+                Text(
+                    text = "Your Email",
+                    fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
+                    fontSize = 16.sp,
+                    color = LightColorScheme.tertiary
+                )
+            },
             leadingIcon = {
                 Icon(
                     painter = painterResource(id = R.drawable.mail__), // Replace with your email icon
@@ -146,12 +152,17 @@ fun SignpuFuntionalSection(onsigninClick: () -> Unit) {
 
         // TextField for Name
         OutlinedTextField(
-            modifier= Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             value = name,
             onValueChange = { name = it },
-            label = { Text(text = "Your Name",fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
-                fontSize = 16.sp,
-                color = LightColorScheme.tertiary) },
+            label = {
+                Text(
+                    text = "Your Name",
+                    fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
+                    fontSize = 16.sp,
+                    color = LightColorScheme.tertiary
+                )
+            },
             leadingIcon = {
                 Icon(
                     painter = painterResource(id = R.drawable.smile), // Replace with your email icon
@@ -165,11 +176,13 @@ fun SignpuFuntionalSection(onsigninClick: () -> Unit) {
 
         // TextField for Password
         OutlinedTextField(
-            modifier= Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             label = {
-                Text("Password",fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
+                Text(
+                    "Password", fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
                     fontSize = 16.sp,
-                    color = LightColorScheme.tertiary)
+                    color = LightColorScheme.tertiary
+                )
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             value = password,
@@ -229,7 +242,8 @@ fun SignpuFuntionalSection(onsigninClick: () -> Unit) {
             )
 
         ) {
-            Text(text = "Sign Up",fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
+            Text(
+                text = "Sign Up", fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
                 fontSize = 16.sp,
             )
         }
@@ -241,18 +255,30 @@ fun SignpuFuntionalSection(onsigninClick: () -> Unit) {
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Already have an account? ", fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
+            Text(
+                text = "Already have an account? ",
+                fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
                 fontSize = 16.sp,
-                color = LightColorScheme.tertiary)
-            TextButton(onClick = onsigninClick) {
-                Text(text = "Sign In", fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
+                color = LightColorScheme.tertiary
+            )
+            TextButton(onClick = {
+                navController.navigate(Destination.Login) {
+                    popUpTo(Destination.Signup) {
+                        inclusive = true
+                    }
+                }
+            }
+            ) {
+                Text(
+                    text = "Sign In",
+                    fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
                     fontSize = 16.sp,
-                    color = LightColorScheme.secondary)
+                    color = LightColorScheme.secondary
+                )
             }
 
+
         }
-
-
     }
 }
 
