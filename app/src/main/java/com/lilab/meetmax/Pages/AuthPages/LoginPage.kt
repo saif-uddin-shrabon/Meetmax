@@ -1,9 +1,9 @@
 package com.lilab.meetmax.Pages.AuthPages
 
 
-import androidx.compose.foundation.Image
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -22,27 +21,25 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -51,25 +48,29 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.lilab.meetmax.Pages.AppComponent.Header
 import com.lilab.meetmax.Pages.AppComponent.StaticSection
 import com.lilab.meetmax.Pages.Navigation.Destination
 import com.lilab.meetmax.R
-import com.lilab.meetmax.ViewModel.AuthViewModel
+import com.lilab.meetmax.ViewModel.AuthVieModel.SigninState
+import com.lilab.meetmax.ViewModel.AuthVieModel.SigninViewModel
 import com.lilab.meetmax.ui.theme.LightColorScheme
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 
 @Composable
 fun LoginPage(
     modifier: Modifier = Modifier,
-    navController: NavController
-) {
+    navController: NavController,
+    signinViewModel: SigninViewModel
 
+) {
 
 
     Surface(
@@ -90,7 +91,8 @@ fun LoginPage(
             Header()
             StaticSection(title = "Sign In", subtitle = "Welcome Back! You've been missed!" , newlineTex = "")
             MiddleSection(
-                navController = navController
+                navController = navController,
+                signinViewModel = signinViewModel
             ) // functional section
 
 
@@ -103,8 +105,11 @@ fun LoginPage(
 
 @Composable
 fun MiddleSection(
-    navController: NavController
+    navController: NavController,
+    signinViewModel: SigninViewModel
 ) {
+
+   
     var email by remember {
         mutableStateOf("")
     }
@@ -116,8 +121,35 @@ fun MiddleSection(
     val passwordVisible  =  remember {
         mutableStateOf(false)
     }
-
     var checked by remember { mutableStateOf(false) }
+
+    val authState = signinViewModel.state.observeAsState()
+    val context = LocalContext.current
+    LaunchedEffect (authState.value) {
+
+        when (authState.value) {
+            is SigninState.Error -> {
+
+                Toast.makeText( context,
+                    (authState.value as SigninState.Error).message,
+                    Toast.LENGTH_SHORT).show()
+
+            }
+            is SigninState.Success -> {
+                navController.navigate(
+                    Destination.MainScreen
+                ){
+                    popUpTo(
+                        Destination.Login
+                    ){
+                        inclusive = true
+                    }
+                }
+            }
+            else -> Unit
+        }
+    }
+
     Column(
         modifier = Modifier.padding(top = 20.dp),
         verticalArrangement = Arrangement.Center,
@@ -232,11 +264,16 @@ fun MiddleSection(
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
+
+
+                signinViewModel.ValidationCredintials(email, password)
+                /*
                 navController.navigate(Destination.MainScreen){
                     popUpTo(Destination.Login){
                         inclusive = true
                     }
                 }
+                */
 
             },
             modifier = Modifier
@@ -284,10 +321,10 @@ fun MiddleSection(
 }
 
 
-//@Preview(showBackground = true, widthDp = 360, heightDp = 640)
-//@Composable
-//fun LoginPagePreview() {
-//    LoginPage(
-//
-//    )
-//}
+@Preview(showBackground = true, widthDp = 360, heightDp = 640)
+@Composable
+fun LoginPagePreview() {
+    val mockNavController = rememberNavController()
+    val signinViewModel = viewModel<SigninViewModel>()
+    LoginPage(navController = mockNavController, signinViewModel = signinViewModel)
+}

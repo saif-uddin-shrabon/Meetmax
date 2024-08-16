@@ -71,7 +71,7 @@ fun ContentScreen(modifier: Modifier = Modifier,selectedIndex : Int) {
     }
 }
 
-@PreviewScreenSizes
+//@PreviewScreenSizes
 @Preview(showBackground = true, widthDp = 360, heightDp = 640)
 @Composable
 fun LoginPagePreview() {

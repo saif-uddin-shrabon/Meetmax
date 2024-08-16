@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1043990487837",
+    "project_id": "meetmax-74fc8",
+    "storage_bucket": "meetmax-74fc8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1043990487837:android:9ef8b49a241e55d66277f4",
+        "android_client_info": {
+          "package_name": "com.lilab.meetmax"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdolWrcuGKtdefUrteZbj5lVjjfymMfuQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

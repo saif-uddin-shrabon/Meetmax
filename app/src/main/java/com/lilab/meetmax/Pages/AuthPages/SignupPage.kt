@@ -25,10 +25,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -67,7 +64,6 @@ import com.lilab.meetmax.Pages.AppComponent.Header
 import com.lilab.meetmax.Pages.AppComponent.StaticSection
 import com.lilab.meetmax.Pages.Navigation.Destination
 import com.lilab.meetmax.R
-import com.lilab.meetmax.ViewModel.AuthViewModel
 import com.lilab.meetmax.ui.theme.LightColorScheme
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -103,6 +99,8 @@ fun SignupPage(modifier: Modifier = Modifier, navController: NavController) {
 
 @Composable
 fun SignpuFuntionalSection(navController: NavController) {
+
+
     var email by remember {
         mutableStateOf("")
     }
@@ -420,11 +418,11 @@ fun GenderSelectionRow() {
 }
 
 
-//@Preview(showBackground = true, widthDp = 360, heightDp = 640)
-//@Composable
-//fun SignupLayout() {
-//    val mockNavController = rememberNavController()
-//    val mockAuthViewModel = AuthViewModel()
-//
-//    SignupPage(navController = mockNavController, authViewModel = mockAuthViewModel)
-//}
+@Preview(showBackground = true, widthDp = 360, heightDp = 640)
+@Composable
+fun SignupLayout() {
+    val mockNavController = rememberNavController()
+
+
+    SignupPage(navController = mockNavController)
+}

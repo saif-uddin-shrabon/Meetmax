@@ -9,13 +9,12 @@ import androidx.navigation.compose.rememberNavController
 import com.lilab.meetmax.Pages.AuthPages.ForgetPasswordPage
 import com.lilab.meetmax.Pages.AuthPages.LoginPage
 import com.lilab.meetmax.Pages.AuthPages.SignupPage
-import com.lilab.meetmax.Pages.MainPages.HomePage
-import com.lilab.meetmax.ViewModel.AuthViewModel
-
+import com.lilab.meetmax.Pages.MainPages.MainScreen
+import com.lilab.meetmax.ViewModel.AuthVieModel.SigninViewModel
 
 
 @Composable
-fun MyAppNavigation() {
+fun MyAppNavigation(modifier: Modifier = Modifier, signinViewModel: SigninViewModel) {
 
     val navController = rememberNavController()
 
@@ -23,7 +22,7 @@ fun MyAppNavigation() {
 
         navigation<SubGraph.Auth>(startDestination = Destination.Login){
             composable<Destination.Login> {
-                 LoginPage(navController = navController)
+                 LoginPage(navController = navController, signinViewModel = signinViewModel)
 
                 }
 
@@ -41,7 +40,9 @@ fun MyAppNavigation() {
 
 
         navigation<SubGraph.App>(startDestination = Destination.MainScreen){
-            composable<Destination.MainScreen> {  }
+            composable<Destination.MainScreen> {
+                MainScreen()
+            }
         }
 
     }

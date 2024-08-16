@@ -10,8 +10,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import com.lilab.meetmax.ViewModel.AuthViewModel
 
 @Composable
 fun HomePage(modifier: Modifier = Modifier) {

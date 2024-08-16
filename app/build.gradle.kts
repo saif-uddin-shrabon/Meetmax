@@ -3,6 +3,9 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.kotlin.serialization)
     id("kotlin-parcelize")
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -62,6 +65,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -71,10 +75,32 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // Metarial 3 dependency
-    implementation("androidx.compose.material3:material3:1.2.1")
-    implementation("androidx.compose.material:material-icons-extended-android:1.6.8")
-    implementation("androidx.compose.ui:ui-text:1.6.8")
+    implementation(libs.material3)
+    implementation(libs.androidx.material.icons.extended.android)
+    implementation(libs.androidx.ui.text)
     implementation(libs.kotlinx.serialization.json)
+
+    //HILT
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+    implementation(libs.androidx.runtime.livedata)
+
+
+
+
+    //ViewModel
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    // LiveData
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    // Lifecycle utilities for Compose
+    implementation(libs.androidx.lifecycle.runtime.compose)
+
+
+    //Retrofit
+
+
+
+    //Coroutines
 
 
 
