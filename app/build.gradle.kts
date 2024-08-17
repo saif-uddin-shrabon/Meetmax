@@ -98,7 +98,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
 
 
-    //Retrofit
+    //Coil
+    implementation(libs.coil.compose)
 
 
 

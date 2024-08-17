@@ -2,6 +2,7 @@ package com.lilab.meetmax.Pages.MainPages
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -14,8 +15,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.lilab.meetmax.Pages.AuthPages.LoginPage
 import com.lilab.meetmax.Pages.Navigation.NavItem
 import com.lilab.meetmax.R
@@ -46,10 +52,16 @@ fun MainScreen(modifier: Modifier = Modifier) {
                         icon = {
                             Icon(
                                 painter = painterResource(id = navItem.icon),
-                                contentDescription = navItem.label
+                                contentDescription = navItem.label,
+                                modifier = Modifier.size(21.dp)
                             )
                         },
-                        label = { Text(navItem.label) }
+                        label = { Text(
+                            navItem.label,
+                            fontFamily =  FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
+                            fontSize = 5.sp
+
+                        ) }
                     )
                 }
             }
