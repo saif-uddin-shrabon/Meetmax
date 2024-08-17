@@ -26,6 +26,7 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -53,22 +54,23 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.lilab.meetmax.Pages.AppComponent.CustomButton
 import com.lilab.meetmax.Pages.AppComponent.Header
 import com.lilab.meetmax.Pages.AppComponent.StaticSection
 import com.lilab.meetmax.Pages.Navigation.Destination
 import com.lilab.meetmax.R
-import com.lilab.meetmax.ViewModel.AuthVieModel.SigninState
-import com.lilab.meetmax.ViewModel.AuthVieModel.SigninViewModel
+import com.lilab.meetmax.ViewModel.AuthVieModel.AuthViewModel
+import com.lilab.meetmax.services.domain.AuthEvents
+import com.lilab.meetmax.services.domain.AuthResult
 import com.lilab.meetmax.ui.theme.LightColorScheme
-import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 
 @Composable
 fun LoginPage(
     modifier: Modifier = Modifier,
     navController: NavController,
-    signinViewModel: SigninViewModel
+    signinViewModel: AuthViewModel
 
 ) {
 
@@ -106,7 +108,7 @@ fun LoginPage(
 @Composable
 fun MiddleSection(
     navController: NavController,
-    signinViewModel: SigninViewModel
+    signinViewModel: AuthViewModel
 ) {
 
    
@@ -123,30 +125,25 @@ fun MiddleSection(
     }
     var checked by remember { mutableStateOf(false) }
 
-    val authState = signinViewModel.state.observeAsState()
-    val context = LocalContext.current
-    LaunchedEffect (authState.value) {
+ val context = LocalContext.current
 
-        when (authState.value) {
-            is SigninState.Error -> {
-
-                Toast.makeText( context,
-                    (authState.value as SigninState.Error).message,
-                    Toast.LENGTH_SHORT).show()
-
-            }
-            is SigninState.Success -> {
-                navController.navigate(
-                    Destination.MainScreen
-                ){
-                    popUpTo(
-                        Destination.Login
-                    ){
-                        inclusive = true
+    // for data collection or listening to the state
+    LaunchedEffect(key1 = true) {
+        signinViewModel.stateFlow.collectLatest {events:AuthResult ->
+            when (events) {
+                is AuthResult.OnError -> {
+                    Toast.makeText(context, events.message, Toast.LENGTH_SHORT).show()
+                }
+                is AuthResult.OnSuccess -> {
+                    Toast.makeText(context, "Sign in Successful", Toast.LENGTH_SHORT).show()
+                    navController.navigate(Destination.MainScreen){
+                        popUpTo(Destination.Login){
+                            inclusive = true
+                        }
                     }
                 }
+
             }
-            else -> Unit
         }
     }
 
@@ -255,41 +252,31 @@ fun MiddleSection(
             }) {
                 Text(text = "Forget Password?", fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
                     fontSize = 16.sp,
-                    color = LightColorScheme.tertiary)
+                    color = LightColorScheme.tertiary
+                )
 
             }
         }
 
 
         Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = {
-
-
-                signinViewModel.ValidationCredintials(email, password)
-                /*
-                navController.navigate(Destination.MainScreen){
-                    popUpTo(Destination.Login){
-                        inclusive = true
-                    }
-                }
-                */
-
-            },
+        // Sign In button from Common component
+        CustomButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
-            shape = RoundedCornerShape(7.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = LightColorScheme.primary,
-                contentColor = Color.White
-            )
-
-        ) {
-            Text(text = "Login",fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
-                fontSize = 16.sp,
+            text = "Sign In",
+            isLoading = signinViewModel.isLoading,
+        ){
+            signinViewModel.UserEventState(
+                AuthEvents.OnLogin(
+                    email = email.trim(),
+                    password = password.trim(),
                 )
+            )
         }
+
+
 
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -325,6 +312,6 @@ fun MiddleSection(
 @Composable
 fun LoginPagePreview() {
     val mockNavController = rememberNavController()
-    val signinViewModel = viewModel<SigninViewModel>()
-    LoginPage(navController = mockNavController, signinViewModel = signinViewModel)
+    val authViewModel = viewModel<AuthViewModel>()
+    LoginPage(navController = mockNavController, signinViewModel = authViewModel)
 }

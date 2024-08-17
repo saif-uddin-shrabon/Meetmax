@@ -10,11 +10,11 @@ import com.lilab.meetmax.Pages.AuthPages.ForgetPasswordPage
 import com.lilab.meetmax.Pages.AuthPages.LoginPage
 import com.lilab.meetmax.Pages.AuthPages.SignupPage
 import com.lilab.meetmax.Pages.MainPages.MainScreen
-import com.lilab.meetmax.ViewModel.AuthVieModel.SigninViewModel
+import com.lilab.meetmax.ViewModel.AuthVieModel.AuthViewModel
 
 
 @Composable
-fun MyAppNavigation(modifier: Modifier = Modifier, signinViewModel: SigninViewModel) {
+fun MyAppNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel) {
 
     val navController = rememberNavController()
 
@@ -22,13 +22,13 @@ fun MyAppNavigation(modifier: Modifier = Modifier, signinViewModel: SigninViewMo
 
         navigation<SubGraph.Auth>(startDestination = Destination.Login){
             composable<Destination.Login> {
-                 LoginPage(navController = navController, signinViewModel = signinViewModel)
+                 LoginPage(navController = navController, signinViewModel = authViewModel)
 
                 }
 
 
             composable<Destination.Signup> {
-                SignupPage (navController = navController)
+                SignupPage (navController = navController, signupViewModel = authViewModel)
 
                 }
             }

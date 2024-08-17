@@ -1,84 +1,100 @@
 package com.lilab.meetmax.ViewModel.AuthVieModel
 
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.lilab.meetmax.services.repository.AuthenticationRepository
+import androidx.lifecycle.viewModelScope
+import com.lilab.meetmax.services.data.FirebseAuthPoint
+import com.lilab.meetmax.services.domain.AuthEvents
+import com.lilab.meetmax.services.domain.AuthResult
+import com.lilab.meetmax.services.domain.AuthValidator
+import com.lilab.meetmax.services.model.CreatUserData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SigninViewModel @Inject constructor(private val authenticationRepository: AuthenticationRepository) : ViewModel() {
+class AuthViewModel @Inject constructor(private val firebaseAuthPoint: FirebseAuthPoint) : ViewModel() {
 
-    private val auth : FirebaseAuth = FirebaseAuth.getInstance()
+    // Channel to send events to the UI
+    private val _state = Channel<AuthResult>()
+    val stateFlow = _state.receiveAsFlow()
 
-    private val _state = MutableLiveData<SigninState>()
-    val state: MutableLiveData<SigninState> = _state
-
-    init {
-        checkAuthStatus()
-    }
-    fun checkAuthStatus(){
-        if(auth.currentUser==null){
-            _state.value = SigninState.Unauthenticated
-        }else{
-            _state.value = SigninState.Authenticated
-        }
-    }
+    var isLoading by mutableStateOf(false)
+        private set
 
 
-    // for input field validation
-    fun ValidationCredintials(email: String, password: String) {
+    // Function to handle user events
+    fun UserEventState(authEvents: AuthEvents) {
+        when (authEvents) {
+            is AuthEvents.OnLogin -> {
+                val email = authEvents.email
+                val password = authEvents.password
+                val result = AuthValidator.ValidateSigninRequest(email, password)
+                if (result.successful) {
+                    SignIn(email, password)
 
-
-        if (email.isEmpty() || password.isEmpty()) {
-            _state.value = SigninState.Error("Email or Password is required")
-
-        }
-
-        _state.value = SigninState.Loading
-        auth.signInWithEmailAndPassword(email,password)
-            .addOnCompleteListener{task->
-                if (task.isSuccessful){
-                    _state.value = SigninState.Authenticated
-                }else{
-                    _state.value = SigninState.Error(task.exception?.message?:"Something went wrong")
+                } else {
+                    viewModelScope.launch {
+                        _state.send(AuthResult.OnError(result.error!!))
+                    }
                 }
             }
 
-    }
-
-
-    fun signup(email : String,password : String){
-
-        if(email.isEmpty() || password.isEmpty()){
-            _state.value = SigninState.Error("Email or password can't be empty")
-            return
-        }
-        _state.value = SigninState.Loading
-        auth.createUserWithEmailAndPassword(email,password)
-            .addOnCompleteListener{task->
-                if (task.isSuccessful){
-                    _state.value = SigninState.Authenticated
-                }else{
-                    _state.value = SigninState.Error(task.exception?.message?:"Something went wrong")
+            is AuthEvents.OnRegister -> {
+                val result = AuthValidator.validateCreateUserRequest(authEvents.creatUserData)
+                if (result.successful) {
+                    createUser(authEvents.creatUserData)
+                } else {
+                    viewModelScope.launch {
+                        _state.send(AuthResult.OnError(result.error!!))
+                    }
                 }
             }
-    }
-
-    fun signout(){
-        auth.signOut()
-        _state.value = SigninState.Unauthenticated
+        }
     }
 
 
+    // Function to sign in user
+    private fun SignIn(email: String, password: String) = viewModelScope.launch {
+        isLoading = true
+
+        val user = firebaseAuthPoint.signInWithEmailAndPassword(email, password)
+        if (user != null) {
+
+            isLoading = false
+            _state.send(AuthResult.OnSuccess("Sign in successful"))
+        } else {
+            isLoading = false
+            _state.send(AuthResult.OnError("Sign in failed"))
+        }
+    }
+
+
+    // Function to create user
+    private fun createUser(creatUserData: CreatUserData) = viewModelScope.launch {
+        isLoading = true
+
+        try {
+                firebaseAuthPoint.createUserWithEmailAndPassword(
+                    creatUserData.email,
+                    creatUserData.password
+                )
+
+
+             isLoading = false
+                _state.send(AuthResult.OnSuccess("User created successfully"))
+
+        } catch (e: Exception) {
+            isLoading = false
+            _state.send(AuthResult.OnError("Unable to create user, try again"))
+        }
+    }
 }
 
-sealed class SigninState {
 
-    object Authenticated : SigninState()
-    object Unauthenticated : SigninState()
-    object Loading : SigninState()
-    object Success : SigninState()
-    data class Error(val message: String) : SigninState()
-}
+
+

@@ -1,5 +1,6 @@
 package com.lilab.meetmax.Pages.AuthPages
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -47,6 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -58,19 +60,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.lilab.meetmax.Pages.AppComponent.CustomButton
 import com.lilab.meetmax.Pages.AppComponent.Header
 import com.lilab.meetmax.Pages.AppComponent.StaticSection
 import com.lilab.meetmax.Pages.Navigation.Destination
 import com.lilab.meetmax.R
+import com.lilab.meetmax.ViewModel.AuthVieModel.AuthViewModel
+import com.lilab.meetmax.services.domain.AuthEvents
+import com.lilab.meetmax.services.domain.AuthResult
+import com.lilab.meetmax.services.domain.AuthState
+import com.lilab.meetmax.services.model.CreatUserData
 import com.lilab.meetmax.ui.theme.LightColorScheme
+import kotlinx.coroutines.flow.collectLatest
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 @Composable
-fun SignupPage(modifier: Modifier = Modifier, navController: NavController) {
+fun SignupPage(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    signupViewModel: AuthViewModel
+) {
     Surface(
         modifier = modifier
             .fillMaxSize()
@@ -86,10 +100,10 @@ fun SignupPage(modifier: Modifier = Modifier, navController: NavController) {
             ) {
 
 
-            // Header & StaticSection from AppComponent
+            // Header & Static Section from AppComponent
             Header()
             StaticSection(title = "Getting Started", subtitle = "Create an account to continue and", newlineTex = "connect with the people.")
-            SignpuFuntionalSection(navController = navController) // functional section
+            SignpuFuntionalSection(navController = navController, signupViewModel) // functional section
 
 
 
@@ -98,7 +112,10 @@ fun SignupPage(modifier: Modifier = Modifier, navController: NavController) {
 }
 
 @Composable
-fun SignpuFuntionalSection(navController: NavController) {
+fun SignpuFuntionalSection(
+    navController: NavController,
+    signinViewModel: AuthViewModel
+) {
 
 
     var email by remember {
@@ -115,6 +132,36 @@ fun SignpuFuntionalSection(navController: NavController) {
 
     val passwordVisible  =  remember {
         mutableStateOf(false)
+    }
+
+    var selectedDate by remember {
+        mutableStateOf("")
+    }
+
+    var selectedGender by remember {
+        mutableStateOf("Male")
+    }
+
+    val context = LocalContext.current
+
+    // for data collection or listening to the state
+    LaunchedEffect(key1 = true) {
+        signinViewModel.stateFlow.collectLatest {events: AuthResult ->
+            when (events) {
+                is AuthResult.OnError -> {
+                    Toast.makeText(context, events.message, Toast.LENGTH_SHORT).show()
+                }
+                is AuthResult.OnSuccess -> {
+                    Toast.makeText(context, "Sign Up Successful", Toast.LENGTH_SHORT).show()
+                    navController.navigate(Destination.Login){
+                        popUpTo(Destination.Login){
+                            inclusive = true
+                        }
+                    }
+                }
+
+            }
+        }
     }
 
     Column(
@@ -220,34 +267,47 @@ fun SignpuFuntionalSection(navController: NavController) {
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-        DatePickerDocked()
+
+        // DatePicker component function placed below
+        DatePicker(selectedDate){ data ->
+            selectedDate = data
+        }
 
         Spacer(modifier = Modifier.height(8.dp))
-        GenderSelectionRow()
 
-
-        Spacer(modifier = Modifier.height(16.dp))
-        // Sign up Button
-        Button(
-            onClick = { },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp),
-            shape = RoundedCornerShape(7.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = LightColorScheme.primary,
-                contentColor = Color.White
-            )
-
-        ) {
-            Text(
-                text = "Sign Up", fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
-                fontSize = 16.sp,
-            )
+        // GenderSelectionRow component function placed below
+        GenderSelectionRow(selectedGender){ gender ->
+            selectedGender = gender
         }
 
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // SignUp buttom from Common component
+        CustomButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            text = "Sign Up",
+            isLoading = signinViewModel.isLoading,
+        ){
+            val createUserDate = CreatUserData(
+                email = email,
+                fullName = name,
+                password = password,
+                DOB = selectedDate.toString().trim(),
+                gender = selectedGender.toString().trim()
+            )
+
+            signinViewModel.UserEventState(
+                AuthEvents.OnRegister(
+                    createUserDate
+                )
+            )
+        }
+
         Spacer(modifier = Modifier.height(8.dp))
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
@@ -282,15 +342,18 @@ fun SignpuFuntionalSection(navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerDocked() {
+fun DatePicker(
+    selectedDate: String,
+    onDateSelected: (String) -> Unit
+) {
     var showDatePicker by remember { mutableStateOf(false) }
-    var selectedDate by remember { mutableStateOf("") }
     val datePickerState = rememberDatePickerState()
 
     // Update the selectedDate when the user picks a date from the date picker
     LaunchedEffect(datePickerState.selectedDateMillis) {
         datePickerState.selectedDateMillis?.let {
-            selectedDate = convertMillisToDate(it)
+            onDateSelected (convertMillisToDate(it))
+            showDatePicker = false
         }
     }
 
@@ -300,7 +363,7 @@ fun DatePickerDocked() {
         OutlinedTextField(
             value = selectedDate,
             onValueChange = { it ->
-                selectedDate = it
+              onDateSelected(it)
 
             },
             leadingIcon = {
@@ -347,10 +410,11 @@ fun convertMillisToDate(millis: Long): String {
 
 
 @Composable
-fun GenderSelectionRow() {
-    var selectedGender by remember {   // Gender selection variable
-        mutableStateOf("Male")
-    }
+fun GenderSelectionRow(
+    selectedGender: String,
+    onGenderSelected: (String) -> Unit
+) {
+
     Card(
 
         modifier = Modifier
@@ -385,7 +449,7 @@ fun GenderSelectionRow() {
                 RadioButton(
                     selected = selectedGender == "Male",
                     onClick = {
-                       selectedGender = "Male"
+                        onGenderSelected("Male")
                     },
                     colors = RadioButtonDefaults.colors(
                         selectedColor = Color.Blue,
@@ -402,7 +466,7 @@ fun GenderSelectionRow() {
                 RadioButton(
                     selected = selectedGender == "Female",
                     onClick = {
-                              selectedGender = "Female"
+                             onGenderSelected("Female")
                     },
                     colors = RadioButtonDefaults.colors(
                         selectedColor = Color.Blue,
@@ -422,7 +486,9 @@ fun GenderSelectionRow() {
 @Composable
 fun SignupLayout() {
     val mockNavController = rememberNavController()
+    val signupViewModel = viewModel<AuthViewModel>()
 
 
-    SignupPage(navController = mockNavController)
+
+    SignupPage(navController = mockNavController, signupViewModel = signupViewModel)
 }

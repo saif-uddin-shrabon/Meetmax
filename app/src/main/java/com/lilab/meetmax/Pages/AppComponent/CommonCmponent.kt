@@ -12,9 +12,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,6 +35,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lilab.meetmax.R
+import com.lilab.meetmax.services.domain.AuthEvents
+import com.lilab.meetmax.ui.theme.IconDark
 import com.lilab.meetmax.ui.theme.LightColorScheme
 
 @Composable
@@ -285,13 +291,49 @@ fun StaticSection(title: String, subtitle: String, newlineTex : String){
                 modifier = Modifier.weight(1f)
             )
         }
+
+
     }
 
 }
 
 
+
+@Composable
+fun CustomButton(
+    modifier: Modifier = Modifier,
+    text: String,
+    isLoading: Boolean = false,
+    onClick: () -> Unit,
+) {
+
+    Button(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp),
+        shape = RoundedCornerShape(7.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = LightColorScheme.primary,
+            contentColor = Color.White
+        ),
+
+                onClick = onClick
+    ) {
+        if (isLoading) {
+            CircularProgressIndicator(color = IconDark)
+        } else {
+            Text(text = "Login",fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
+                fontSize = 16.sp,
+            )
+        }
+    }
+}
+
 @Preview(showBackground = true, widthDp = 360, heightDp = 640)
 @Composable
 fun HeaderLayout() {
-    StaticSection(title = "Sign in", subtitle ="Welcome Back! You've been missed!", newlineTex = "password to continue" )
+   // StaticSection(title = "Sign in", subtitle ="Welcome Back! You've been missed!", newlineTex = "password to continue" )
+
+    CustomButton(text = "Login", onClick = {}, modifier = Modifier.padding(16.dp).height(20.dp).width(10.dp))
+
 }
