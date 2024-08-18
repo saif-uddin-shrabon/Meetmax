@@ -16,12 +16,12 @@ fun Settings(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.Green),
+            .background(Color.White),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Text(text = "Settings", color = Color.White, fontSize = 24.sp)
+        Text(text = "Settings", color = Color.Black, fontSize = 24.sp)
     }
 
 }

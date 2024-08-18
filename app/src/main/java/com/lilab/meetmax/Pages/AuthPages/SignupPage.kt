@@ -236,7 +236,7 @@ fun SignpuFuntionalSection(
             },
             leadingIcon = {
                 Icon(
-                    painter = painterResource(id = R.drawable.lock), // Replace with your password icon
+                    painter = painterResource(id = R.drawable.lock),
                     contentDescription = "Password Icon",
                     tint = Color.Gray
                 )

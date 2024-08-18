@@ -51,15 +51,17 @@ fun PostSectionCard(){
 
    val shape = CircleShape
     var text by remember { mutableStateOf("") }
+    Box(modifier = Modifier.background(Color.White)) {
 
-    Column(
 
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Row {
+        Column(
 
-            Spacer(modifier = Modifier.width(10.dp))
+            modifier = Modifier.padding(start = 10.dp, top = 16.dp, end = 10.dp, bottom = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Row {
+
                 Image(
                     painter = painterResource(id = R.drawable.profile),
                     contentDescription = null,
@@ -69,149 +71,151 @@ fun PostSectionCard(){
 
                 )
 
-            Spacer(modifier = Modifier.width(10.dp))
+                Spacer(modifier = Modifier.width(10.dp))
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(40.dp)
-                    .background(LightColorScheme.background, RoundedCornerShape(10.dp))
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-            ) {
-                BasicTextField(
-                    value = text,
-                    onValueChange = {},
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .align(Alignment.CenterStart),
-                    singleLine = true,
-                    decorationBox = { innerTextField ->
-                        if (text.isEmpty()) {
-                            Text(
-                                text = "What's happening?",
-                                color = Color.Gray,
-                                modifier = Modifier.align(Alignment.CenterStart)
+                        .height(40.dp)
+                        .background(LightColorScheme.background, RoundedCornerShape(10.dp))
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                ) {
+                    BasicTextField(
+                        value = text,
+                        onValueChange = {},
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.CenterStart),
+                        singleLine = true,
+                        decorationBox = { innerTextField ->
+                            if (text.isEmpty()) {
+                                Text(
+                                    text = "What's happening?",
+                                    color = Color.Gray,
+                                    modifier = Modifier.align(Alignment.CenterStart)
 
-                            )
+                                )
+                            }
+                            innerTextField()
                         }
-                        innerTextField()
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+
+
+                //Video Icon
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = { },
+                        modifier = Modifier.size(45.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.video_camera),
+                            contentDescription = "Image Icon",
+                            tint = LightColorScheme.tertiary
+                        )
+
                     }
-                )
-            }
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "Live",
+                        fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
+                        fontSize = 14.sp,
+                        color = LightColorScheme.tertiary
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-            ) {
+                    )
+                }
 
-
-            //Video Icon
-            Row(
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(
-                    onClick = { },
-                    modifier = Modifier.size(45.dp)
+                //Photo Section
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.video_camera),
-                        contentDescription = "Image Icon",
-                        tint = LightColorScheme.tertiary
+                    IconButton(
+                        onClick = { },
+                        modifier = Modifier.size(45.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.picture),
+                            contentDescription = "Image Icon",
+                            tint = LightColorScheme.tertiary
+                        )
+
+                    }
+
+                    Text(
+                        text = "Photo",
+                        fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
+                        fontSize = 14.sp,
+                        color = LightColorScheme.tertiary
+
+                    )
+                }
+
+                //Feelings Section
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = { },
+                        modifier = Modifier.size(45.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.smile),
+                            contentDescription = "Image Icon",
+                            tint = LightColorScheme.tertiary
+                        )
+
+                    }
+
+                    Text(
+                        text = "Feeling",
+                        fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
+                        fontSize = 14.sp,
+                        color = LightColorScheme.tertiary
+
+                    )
+                }
+
+                // Button
+
+                Button(
+                    modifier = Modifier
+                        .width(80.dp)
+                        .height(35.dp)
+                        .align(Alignment.CenterVertically),
+                    shape = RoundedCornerShape(7.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = LightColorScheme.primary,
+                        contentColor = Color.White
+                    ),
+
+                    onClick = { },
+                ) {
+
+                    Text(
+                        text = "Post",
+                        fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
+                        fontSize = 14.sp,
                     )
 
                 }
 
-                Text(
-                    text = "Live",
-                    fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
-                    fontSize = 14.sp,
-                    color = LightColorScheme.tertiary
-
-                )
-            }
-
-            //Photo Section
-            Row(
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(
-                    onClick = { },
-                    modifier = Modifier.size(45.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.picture),
-                        contentDescription = "Image Icon",
-                        tint = LightColorScheme.tertiary
-                    )
-
-                }
-
-                Text(
-                    text = "Photo",
-                    fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
-                    fontSize = 14.sp,
-                    color = LightColorScheme.tertiary
-
-                )
-            }
-
-            //Feelings Section
-            Row(
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(
-                    onClick = { },
-                    modifier = Modifier.size(45.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.smile),
-                        contentDescription = "Image Icon",
-                        tint = LightColorScheme.tertiary
-                    )
-
-                }
-
-                Text(
-                    text = "Feeling",
-                    fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
-                    fontSize = 14.sp,
-                    color = LightColorScheme.tertiary
-
-                )
-            }
-
-            // Button
-
-            Button(
-                modifier = Modifier
-                    .width(70.dp)
-                    .height(35.dp),
-                shape = RoundedCornerShape(7.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = LightColorScheme.primary,
-                    contentColor = Color.White
-                ),
-
-                onClick = { },
-            ) {
-
-                    Text(text = "Post",fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
-                        fontSize = 16.sp,
-                    )
 
             }
-
-
-
 
         }
-
     }
 
 }

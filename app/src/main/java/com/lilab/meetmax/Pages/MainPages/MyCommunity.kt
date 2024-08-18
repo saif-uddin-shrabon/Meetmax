@@ -16,12 +16,12 @@ fun MyCommunity(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.Green),
+            .background(Color.White),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Text(text = "My Community", color = Color.White, fontSize = 24.sp)
+        Text(text = "My Community", color = Color.Black, fontSize = 24.sp)
     }
 
 }

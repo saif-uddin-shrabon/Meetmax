@@ -32,50 +32,53 @@ fun StoryComponent(imageUrl : String) {
 
 
     val shape = CircleShape
-    Column (
+    Box(modifier = Modifier.background(Color.White)){
+        Column (
 
-        modifier = Modifier.padding(start = 10.dp ,top =16.dp, end = 10.dp, bottom = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Box(
-            modifier = Modifier
-                .diagonalGradientBorder(
-                    colors = listOf(
-                        Color(0xFF377DFF),
-                        Color(0xFF377DFF),
-                        Color(0xFF377DFF),
-                    ),
-                    shape = shape,
-                    isFromRight = true
-                )
+            modifier = Modifier.padding(start = 10.dp ,top =16.dp, end = 10.dp, bottom = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Box(
                 modifier = Modifier
-                    .size(66.dp)
-                    .padding(6.dp)
-                    .background(color = Color.LightGray, shape = shape)
-                    .clip(shape)
+                    .diagonalGradientBorder(
+                        colors = listOf(
+                            Color(0xFF377DFF),
+                            Color(0xFF377DFF),
+                            Color(0xFF377DFF),
+                        ),
+                        shape = shape,
+                        isFromRight = true
+                    )
             ) {
-                Image(
-                    painter = rememberAsyncImagePainter(imageUrl),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize()
-                )
+                Box(
+                    modifier = Modifier
+                        .size(66.dp)
+                        .padding(6.dp)
+                        .background(color = Color.LightGray, shape = shape)
+                        .clip(shape)
+                ) {
+                    Image(
+                        painter = rememberAsyncImagePainter(imageUrl),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
             }
+
+
+            Text(
+                text = "Saif",
+                fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
+                textAlign = TextAlign.Center,
+                fontSize = 16.sp,
+                color = LightColorScheme.tertiary,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+
         }
-
-
-        Text(
-            text = "Saif",
-            fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
-            textAlign = TextAlign.Center,
-            fontSize = 16.sp,
-            color = LightColorScheme.tertiary,
-            modifier = Modifier.padding(top = 8.dp)
-        )
-
     }
+
 
 
 }
