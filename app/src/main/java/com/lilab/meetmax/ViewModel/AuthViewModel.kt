@@ -1,4 +1,4 @@
-package com.lilab.meetmax.ViewModel.AuthVieModel
+package com.lilab.meetmax.ViewModel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

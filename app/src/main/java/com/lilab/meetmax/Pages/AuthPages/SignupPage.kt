@@ -22,8 +22,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DatePicker
@@ -62,16 +60,16 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.lilab.meetmax.Pages.AppComponent.CustomButton
 import com.lilab.meetmax.Pages.AppComponent.Header
 import com.lilab.meetmax.Pages.AppComponent.StaticSection
 import com.lilab.meetmax.Pages.Navigation.Destination
 import com.lilab.meetmax.R
-import com.lilab.meetmax.ViewModel.AuthVieModel.AuthViewModel
+import com.lilab.meetmax.ViewModel.AuthViewModel
 import com.lilab.meetmax.services.domain.AuthEvents
 import com.lilab.meetmax.services.domain.AuthResult
-import com.lilab.meetmax.services.domain.AuthState
 import com.lilab.meetmax.services.model.CreatUserData
 import com.lilab.meetmax.ui.theme.LightColorScheme
 import kotlinx.coroutines.flow.collectLatest
@@ -82,7 +80,7 @@ import java.util.Locale
 @Composable
 fun SignupPage(
     modifier: Modifier = Modifier,
-    navController: NavController,
+    navController: NavHostController,
     signupViewModel: AuthViewModel
 ) {
     Surface(

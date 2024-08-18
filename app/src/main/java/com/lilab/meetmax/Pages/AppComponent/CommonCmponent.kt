@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -404,6 +405,37 @@ fun ActionButton(icon: Int, text: String) {
         )
     }
 }
+
+
+// Basic Text field
+@Composable
+fun BasicTextFiledWithHint(
+    modifier: Modifier = Modifier,
+    hint: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    isEnabled: (Boolean) -> Unit
+) {
+    Box(
+        modifier = modifier.fillMaxWidth()
+    ) {
+
+        if (value.isEmpty()) {
+            Text(text = hint, color = Color.LightGray)
+            isEnabled(false)
+        }
+
+        BasicTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = value,
+            onValueChange = onValueChange,
+            textStyle = TextStyle.Default.copy(Color.Black)
+        )
+
+    }
+}
+
+
 
 
 @Preview(showBackground = true, widthDp = 360, heightDp = 640)

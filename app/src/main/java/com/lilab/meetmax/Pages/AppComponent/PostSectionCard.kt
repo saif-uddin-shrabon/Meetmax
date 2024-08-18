@@ -43,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.lilab.meetmax.Pages.Navigation.Destination
@@ -51,7 +52,7 @@ import com.lilab.meetmax.ui.theme.IconDark
 import com.lilab.meetmax.ui.theme.LightColorScheme
 
 @Composable
-fun PostSectionCard(){
+fun PostSectionCard(navHostController: NavHostController){
 
    val shape = CircleShape
     var text by remember { mutableStateOf("") }
@@ -84,7 +85,8 @@ fun PostSectionCard(){
                         .background(LightColorScheme.background, RoundedCornerShape(10.dp))
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                         .clickable {
-                           // navController.navigate(Destination.CreatePost)
+
+                                navHostController.navigate(Destination.CreatPost)
                         }
 
                 ) {
@@ -222,5 +224,5 @@ fun PostSectionCard(){
 @Composable
 fun PostSectionCardPreview() {
     val mockNavController = rememberNavController()
-    PostSectionCard()
+    //PostSectionCard()
 }

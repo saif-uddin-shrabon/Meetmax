@@ -36,7 +36,7 @@ import com.lilab.meetmax.R
 import com.lilab.meetmax.ui.theme.LightColorScheme
 
 @Composable
-fun HomePage(modifier: Modifier = Modifier) {
+fun HomePage(modifier: Modifier = Modifier, navHostController: NavHostController) {
 
     val state = rememberScrollState()
    Scaffold {it ->
@@ -60,7 +60,7 @@ fun HomePage(modifier: Modifier = Modifier) {
                         }
 
                         Spacer(modifier = Modifier.height(10.dp))
-                        PostSectionCard()
+                        PostSectionCard(navHostController)
                         Spacer(modifier = Modifier.height(10.dp))
                     }
 
@@ -119,5 +119,5 @@ fun SearchBar(){
 fun HomePagePreview() {
 //
      val mockNavController = rememberNavController()
-    HomePage()
+   // HomePage()
 }

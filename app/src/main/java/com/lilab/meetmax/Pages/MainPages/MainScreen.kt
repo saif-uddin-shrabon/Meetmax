@@ -23,13 +23,14 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.lilab.meetmax.Pages.AuthPages.LoginPage
 import com.lilab.meetmax.Pages.Navigation.NavItem
 import com.lilab.meetmax.R
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun MainScreen(modifier: Modifier = Modifier, navHostController: NavHostController) {
     val navItems = listOf(
         NavItem("Feed", R.drawable.feed),
         NavItem("My Community", R.drawable.community),
@@ -69,15 +70,15 @@ fun MainScreen(modifier: Modifier = Modifier) {
             }
         }
     ) { innerPadding ->
-        ContentScreen(modifier = Modifier.padding(innerPadding),selectedIndex)
+        ContentScreen(modifier = Modifier.padding(innerPadding),selectedIndex, navHostController = navHostController)
     }
 
 }
 
 @Composable
-fun ContentScreen(modifier: Modifier = Modifier,selectedIndex : Int) {
+fun ContentScreen(modifier: Modifier = Modifier,selectedIndex : Int, navHostController: NavHostController) {
     when (selectedIndex) {
-        0 -> HomePage()
+        0 -> HomePage(navHostController= navHostController)
         1 -> MyCommunity()
         2 -> Explore()
         3 -> Notifications()
@@ -90,5 +91,5 @@ fun ContentScreen(modifier: Modifier = Modifier,selectedIndex : Int) {
 @Composable
 fun LoginPagePreview() {
 
-    MainScreen()
+  //  MainScreen()
 }

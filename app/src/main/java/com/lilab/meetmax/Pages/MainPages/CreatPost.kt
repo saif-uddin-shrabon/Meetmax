@@ -1,7 +1,12 @@
 package com.lilab.meetmax.Pages.MainPages
 
+import android.net.Uri
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,23 +25,35 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lilab.meetmax.Pages.AppComponent.ActionButton
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.lilab.meetmax.Pages.AppComponent.BasicTextFiledWithHint
 import com.lilab.meetmax.Pages.AppComponent.CustomButton
+import com.lilab.meetmax.Pages.AppComponent.MediaSelector
 import com.lilab.meetmax.Pages.AppComponent.ToolbarSection
+import com.lilab.meetmax.Pages.Navigation.Destination
 import com.lilab.meetmax.R
+import com.lilab.meetmax.services.utils.PermissionManager
 import com.lilab.meetmax.ui.theme.LightColorScheme
 
 @Composable
-fun CreatPost() {
+fun CreatPost(navHostController: NavHostController) {
+
+
 
     Surface(
 
@@ -49,20 +66,22 @@ fun CreatPost() {
        ) {
            ToolbarSection()
 
-           CreatePostScreen()
+           CreatePostScreen(navHostController)
        }
     }
 }
 
 @Composable
-fun CreatePostScreen(){
+fun CreatePostScreen(navHostController: NavHostController){
+
+
      Column(
             modifier =  Modifier.padding(start = 10.dp, end = 10.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
      ) {
             Spacer(modifier = Modifier.height(8.dp))
-            HeadingSectionoOfCreatPost()
+            HeadingSectionOfCreatPost(navHostController)
             Spacer(modifier = Modifier.height(8.dp))
             PostContent()
             Spacer(modifier = Modifier.height(8.dp))
@@ -78,7 +97,7 @@ fun CreatePostScreen(){
 }
 
 @Composable
-fun HeadingSectionoOfCreatPost(){
+fun HeadingSectionOfCreatPost(navHostController: NavHostController){
 
     Row (
         modifier = Modifier
@@ -91,7 +110,15 @@ fun HeadingSectionoOfCreatPost(){
             painter = painterResource(id = R.drawable.back_arrow),
             contentDescription = "Arrow Back",
             modifier = Modifier
-                .size(24.dp)
+                .size(20.dp)
+                .clickable {
+                     navHostController.navigate(Destination.MainScreen){
+                            popUpTo(Destination.MainScreen) {
+                                inclusive = true
+                            }
+                     }
+
+                }
         )
 
         Spacer(modifier = Modifier.width(8.dp))
@@ -147,6 +174,8 @@ fun HeadingSectionoOfCreatPost(){
 
 @Composable
 fun PostContent(){
+    var isEnabled by remember { mutableStateOf(false) }
+    var textValue by remember { mutableStateOf("") }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -162,25 +191,23 @@ fun PostContent(){
         )
 
         Spacer(modifier = Modifier.width(8.dp))
-        BasicTextField(
-            value = "",
-            onValueChange = {},
+        BasicTextFiledWithHint(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(100.dp)
                 .background(Color(0xFFF0F0F0), RoundedCornerShape(8.dp))
-                .padding(8.dp),
-            singleLine = false,
-            decorationBox = { innerTextField ->
-                if (true) { // Replace 'true' with condition to check if value is empty
-                    Text(
-                        text = "What's happening?",
-                        color = Color.Gray
-                    )
-                }
-                innerTextField()
+                .padding(horizontal = 8.dp, vertical = 5.dp),
+            hint = "What's happening?",
+            value = textValue,
+            onValueChange = {
+                textValue = it
+                isEnabled = true
+            },
+            isEnabled = {
+                isEnabled = it
             }
         )
+
 
     }
 }
@@ -189,16 +216,41 @@ fun PostContent(){
 @Composable
 fun ActionPerformer(){
 
-    Column(
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+
+    val context = LocalContext.current
+
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var videoUri by remember { mutableStateOf<Uri?>(null) }
+
+    val permissions = PermissionManager.getPermissionRequest()
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? -> imageUri = uri }
+    val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permission ->
+        val allGranted = permission.all { it.value }
+        if (allGranted) {
+            launcher.launch("image/*")
+        } else {
+            Toast.makeText(context, "Permissions Not Granted!! Please grant permissions", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+
+    MediaSelector(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(vertical = 3.dp),
+        context = context,
+        imageUri = imageUri,
+        videoUri = videoUri,
+        onImageSelected = { imageUri = it },
+        permissions = permissions,
+        imageLauncher = launcher,
+        permissionLauncher = permissionLauncher
+    )
 
-    ) {
-        ActionButton(icon = R.drawable.video_camera, text = "Video")
-        ActionButton(icon = R.drawable.picture, text = "Picture")
-        ActionButton(icon = R.drawable.smile, text = "Smile")
-    }
+
+
+
 
 }
 
@@ -208,5 +260,6 @@ fun ActionPerformer(){
 @Preview(showBackground = true, heightDp = 650, widthDp = 360)
 @Composable
 fun CreatPostPreview() {
-    CreatPost()
+    val mockNavController = rememberNavController()
+    CreatPost(mockNavController)
 }
