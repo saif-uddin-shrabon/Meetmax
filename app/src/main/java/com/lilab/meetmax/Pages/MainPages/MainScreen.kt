@@ -22,6 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.lilab.meetmax.Pages.AuthPages.LoginPage
 import com.lilab.meetmax.Pages.Navigation.NavItem
 import com.lilab.meetmax.R
@@ -87,5 +89,6 @@ fun ContentScreen(modifier: Modifier = Modifier,selectedIndex : Int) {
 @Preview(showBackground = true, widthDp = 360, heightDp = 640)
 @Composable
 fun LoginPagePreview() {
+
     MainScreen()
 }

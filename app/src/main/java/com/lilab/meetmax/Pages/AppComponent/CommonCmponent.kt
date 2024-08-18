@@ -1,7 +1,9 @@
 package com.lilab.meetmax.Pages.AppComponent
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,7 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.material3.Button
@@ -18,11 +22,13 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -34,6 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lilab.meetmax.Pages.MainPages.SearchBar
 import com.lilab.meetmax.R
 import com.lilab.meetmax.services.domain.AuthEvents
 import com.lilab.meetmax.ui.theme.IconDark
@@ -299,6 +306,7 @@ fun StaticSection(title: String, subtitle: String, newlineTex : String){
 
 
 
+// Custom Button 1
 @Composable
 fun CustomButton(
     modifier: Modifier = Modifier,
@@ -310,7 +318,7 @@ fun CustomButton(
     Button(
         modifier = Modifier
             .fillMaxWidth()
-            .height(50.dp),
+            .height(40.dp),
         shape = RoundedCornerShape(7.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = LightColorScheme.primary,
@@ -322,18 +330,87 @@ fun CustomButton(
         if (isLoading) {
             CircularProgressIndicator(color = IconDark)
         } else {
-            Text(text = "Login",fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
+            Text(text = text,fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
                 fontSize = 16.sp,
             )
         }
     }
 }
 
+
+// Top profile , search and message section
+@Composable
+fun ToolbarSection() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(80.dp)
+            .background(Color.White),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        Spacer(modifier = Modifier.width(5.dp))
+
+        Box(
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.profile),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+            )
+
+        }
+        SearchBar()
+
+        Box(
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.message),
+                contentDescription = "Angle Down Icon",
+                Modifier
+                    .size(24.dp)
+
+            )
+
+        }
+
+        Spacer(modifier = Modifier.width(5.dp))
+
+
+    }
+}
+
+
+// Custom Button
+@Composable
+fun ActionButton(icon: Int, text: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Icon(
+            painter = painterResource(id = icon),
+            contentDescription = text,
+            modifier = Modifier.size(16.dp),
+            tint = Color.Gray
+        )
+        Spacer(modifier = Modifier.width(4.dp))
+        Text(
+            text = text,
+            color = Color.Gray,
+            fontSize = 14.sp
+        )
+    }
+}
+
+
 @Preview(showBackground = true, widthDp = 360, heightDp = 640)
 @Composable
 fun HeaderLayout() {
    // StaticSection(title = "Sign in", subtitle ="Welcome Back! You've been missed!", newlineTex = "password to continue" )
 
-    CustomButton(text = "Login", onClick = {}, modifier = Modifier.padding(16.dp).height(20.dp).width(10.dp))
+//    CustomButton(text = "Login", onClick = {}, modifier = Modifier.padding(16.dp).height(20.dp).width(10.dp))
 
 }

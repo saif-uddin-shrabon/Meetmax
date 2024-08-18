@@ -21,8 +21,6 @@ sealed class Destination{
     @Serializable
     data object MainScreen: Destination()
 
-    @Serializable
-    data object  HomePage : Destination()
 
 
 

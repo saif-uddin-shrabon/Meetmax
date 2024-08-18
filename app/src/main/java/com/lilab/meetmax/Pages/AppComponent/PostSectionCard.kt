@@ -3,6 +3,7 @@ package com.lilab.meetmax.Pages.AppComponent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,7 +42,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import com.lilab.meetmax.Pages.Navigation.Destination
 import com.lilab.meetmax.R
 import com.lilab.meetmax.ui.theme.IconDark
 import com.lilab.meetmax.ui.theme.LightColorScheme
@@ -74,31 +78,25 @@ fun PostSectionCard(){
                 Spacer(modifier = Modifier.width(10.dp))
 
                 Box(
-                    modifier = Modifier
+                          modifier = Modifier
                         .fillMaxWidth()
                         .height(40.dp)
                         .background(LightColorScheme.background, RoundedCornerShape(10.dp))
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                ) {
-                    BasicTextField(
-                        value = text,
-                        onValueChange = {},
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.CenterStart),
-                        singleLine = true,
-                        decorationBox = { innerTextField ->
-                            if (text.isEmpty()) {
-                                Text(
-                                    text = "What's happening?",
-                                    color = Color.Gray,
-                                    modifier = Modifier.align(Alignment.CenterStart)
-
-                                )
-                            }
-                            innerTextField()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .clickable {
+                           // navController.navigate(Destination.CreatePost)
                         }
+
+                ) {
+
+                    Text(
+
+                        text = "What's happening?",
+                        color = Color.Gray,
+                        modifier = Modifier.align(Alignment.CenterStart)
+
                     )
+
                 }
             }
 
@@ -223,5 +221,6 @@ fun PostSectionCard(){
 @Preview(showBackground = true,  widthDp = 360, heightDp = 640)
 @Composable
 fun PostSectionCardPreview() {
+    val mockNavController = rememberNavController()
     PostSectionCard()
 }

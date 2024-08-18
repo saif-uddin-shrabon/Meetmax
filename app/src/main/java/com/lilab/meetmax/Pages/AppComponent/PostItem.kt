@@ -58,6 +58,7 @@ fun PostItem() {
                  Comments()
 
 
+
              }
              
          }
@@ -322,24 +323,6 @@ fun Comments(){
 
 }
 
-// Custom Button
-@Composable
-fun ActionButton(icon: Int, text: String) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Icon(
-            painter = painterResource(id = icon),
-            contentDescription = text,
-            modifier = Modifier.size(16.dp),
-            tint = Color.Gray
-        )
-        Spacer(modifier = Modifier.width(4.dp))
-        Text(
-            text = text,
-            color = Color.Gray,
-            fontSize = 14.sp
-        )
-    }
-}
 
 
 
