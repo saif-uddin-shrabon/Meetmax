@@ -33,11 +33,12 @@ class AuthViewModel @Inject constructor(
             is AuthEvents.OnLogin -> {
                 val email = authEvents.email
                 val password = authEvents.password
+                val checked = authEvents.remember
                 val result = AuthValidator.ValidateSigninRequest(email, password)
                 if (result.successful) {
                     // Sign in function call for firebase authentication
                     viewModelScope.launch {
-                        firebaseAuthRepositoroy.signInWithEmailAndPassword(email, password)
+                        firebaseAuthRepositoroy.signInWithEmailAndPassword(email, password, checked)
                     }
 
                 } else {

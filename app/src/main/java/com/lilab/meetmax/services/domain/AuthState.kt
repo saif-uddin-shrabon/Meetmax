@@ -7,7 +7,7 @@ data class AuthState (
 )
 
 sealed class AuthEvents {
-    data class OnLogin(val email: String, val password: String) : AuthEvents()
+    data class OnLogin(val email: String, val password: String, val remember : Boolean) : AuthEvents()
     data class OnRegister(val creatUserData: CreatUserData) : AuthEvents()
 }
 

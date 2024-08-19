@@ -10,13 +10,13 @@ object AuthValidator {
             val email = createUserData.email
             val fullName = createUserData.fullName
     
-            if (username.isBlank() && password.isBlank() && email.isBlank() && fullName.isBlank()) {
+            if (username!!.isBlank() && password!!.isBlank() && email!!.isBlank() && fullName!!.isBlank()) {
                 return ValidateResult(
                     successful = false,
                     error = "All fields are empty"
                 )
             }
-            if (email.isBlank()) {
+            if (email!!.isBlank()) {
                 return ValidateResult(
                     successful = false,
                     error = "Email cannot be blank"
@@ -40,7 +40,7 @@ object AuthValidator {
                     )
                 }
             }
-            if (fullName.isBlank()) {
+            if (fullName!!.isBlank()) {
                 return ValidateResult(
                     successful = false,
                     error = "FullName cannot be blank"
@@ -52,7 +52,7 @@ object AuthValidator {
                     error = "Username cannot be blank"
                 )
             }
-            if (password.isBlank()) {
+            if (password!!.isBlank()) {
                 return ValidateResult(
                     successful = false,
                     error = "Password cannot be blank"

@@ -10,6 +10,7 @@ import com.lilab.meetmax.Pages.Navigation.Destination
 import com.lilab.meetmax.Pages.Navigation.MainNavigation
 import com.lilab.meetmax.ViewModel.AuthViewModel
 import com.lilab.meetmax.ViewModel.PostViewModel
+import com.lilab.meetmax.services.utils.SharedPref.getUserId
 import com.lilab.meetmax.ui.theme.MeetmaxTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,7 +26,16 @@ class MainActivity : ComponentActivity() {
            MeetmaxTheme {
                Surface {
                    val navController = rememberNavController()
-                   MainNavigation(authViewModel = authViewModel, postViewModel = postViewModel, navController = navController, startDestination = Destination.Login )
+                   if (getUserId(this) != "") {
+                       MainNavigation(authViewModel = authViewModel, postViewModel = postViewModel, navController = navController, startDestination = Destination.MainScreen )
+                   } else {
+                       MainNavigation(
+                           authViewModel = authViewModel,
+                           postViewModel = postViewModel,
+                           navController = navController,
+                           startDestination = Destination.Login
+                       )
+                   }
                }
            }
 

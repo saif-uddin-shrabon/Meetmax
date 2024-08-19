@@ -298,6 +298,7 @@ fun MiddleSection(
                         AuthEvents.OnLogin(
                             email = email.trim(),
                             password = password.trim(),
+                            remember = checked
                         )
                     )
 

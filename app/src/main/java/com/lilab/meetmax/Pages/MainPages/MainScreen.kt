@@ -38,7 +38,7 @@ import com.lilab.meetmax.ViewModel.PostViewModel
 fun MainScreen(modifier: Modifier = Modifier, navHostController: NavHostController,postViewModel: PostViewModel) {
     val navItems = listOf(
         NavItem("Feed", R.drawable.feed,0),
-        NavItem("My Community", R.drawable.community,0),
+        NavItem("Community", R.drawable.community,0),
         NavItem("Explore", R.drawable.explore,0),
         NavItem("Notification", R.drawable.notification,10),
         NavItem("Settings", R.drawable.setting,0),
@@ -69,7 +69,7 @@ fun MainScreen(modifier: Modifier = Modifier, navHostController: NavHostControll
                                             Text(
                                                 text = navItem.badgeCount.toString(),
                                                 color = Color.White,
-                                                fontSize = 10.sp
+                                                fontSize = 12.sp
                                             )
                                         }
                                     }
@@ -88,7 +88,7 @@ fun MainScreen(modifier: Modifier = Modifier, navHostController: NavHostControll
                         label = { Text(
                             navItem.label,
                             fontFamily =  FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
-                            fontSize = 5.sp
+                            fontSize = 10.sp
 
                         )
                         },
