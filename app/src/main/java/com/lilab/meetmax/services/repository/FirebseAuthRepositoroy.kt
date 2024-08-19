@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.lilab.meetmax.services.model.CreatUserData
+import com.lilab.meetmax.services.model.Response
 import com.lilab.meetmax.services.utils.NetworkResult
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
@@ -20,11 +21,17 @@ class FirebseAuthRepositoroy @Inject constructor (
 
      val _loginResultLiveData = MutableLiveData<NetworkResult<FirebaseUser>>()
      val _registerResultLiveData = MutableLiveData<NetworkResult<FirebaseUser>>()
+    val _forgetPasswordResultLiveData = MutableLiveData<NetworkResult<Response>>()
+
+
 
     val loginResultLiveData: LiveData<NetworkResult<FirebaseUser>>
         get() = _loginResultLiveData
     val registerResultLiveData: LiveData<NetworkResult<FirebaseUser>>
         get() = _registerResultLiveData
+
+    val forgetPasswordResultLiveData: LiveData<NetworkResult<Response>>
+        get() = _forgetPasswordResultLiveData
 
 
 
@@ -80,6 +87,21 @@ class FirebseAuthRepositoroy @Inject constructor (
             _registerResultLiveData.postValue(NetworkResult.Error(e.localizedMessage) )
 
         }
+    }
+
+
+    //Forget Password
+    suspend fun forgetPassword(email: String){
+        _forgetPasswordResultLiveData.postValue(NetworkResult.Loading())
+        try {
+            firbaseAuth.sendPasswordResetEmail(email).await()
+            _forgetPasswordResultLiveData.postValue(NetworkResult.Success(Response("Email sent successfully, Please check your email.")))
+
+        }catch (e: Exception){
+            e.printStackTrace()
+            _forgetPasswordResultLiveData.postValue(NetworkResult.Error(e.localizedMessage) )
+        }
+
     }
 
 }

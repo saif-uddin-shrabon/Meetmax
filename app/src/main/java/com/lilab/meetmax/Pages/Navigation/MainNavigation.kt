@@ -44,7 +44,8 @@ fun MainNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel, 
 
         composable<Destination.ForgetPassword>{
             ForgetPasswordPage(
-                navController = navController
+                navController = navController,
+                forgetPasswordViewModel = authViewModel
             )
         }
 
@@ -68,32 +69,7 @@ fun MainNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel, 
         }
 
 
-        /*
-        navigation<SubGraph.Auth>(startDestination = Destination.Login){
-            composable<Destination.Login> {
-                 LoginPage(navController = navController, signinViewModel = authViewModel)
 
-                }
-
-
-            composable<Destination.Signup> {
-                SignupPage (navController = navController, signupViewModel = authViewModel)
-
-                }
-            }
-
-            composable<Destination.ForgetPassword> {
-                ForgetPasswordPage (navController = navController)
-
-             }
-
-
-        navigation<SubGraph.App>( startDestination = Destination.MainScreen){
-            composable<Destination.MainScreen> {
-                MainScreen()
-            }
-
-            */
 
         }
 

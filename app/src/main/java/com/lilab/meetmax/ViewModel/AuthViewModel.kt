@@ -18,22 +18,13 @@ class AuthViewModel @Inject constructor(
     private val firebaseAuthRepositoroy: FirebseAuthRepositoroy
 ) : ViewModel() {
 
-    // Channel to send events to the UI
-//    private val _state = Channel<AuthResult>()
-//    val stateFlow = _state.receiveAsFlow()
-
 
     // Live data
     val loginResult = firebaseAuthRepositoroy.loginResultLiveData
 
     val registerResult = firebaseAuthRepositoroy.registerResultLiveData
 
-
-
-
-
-    var isLoading by mutableStateOf(false)
-        private set
+    val forgetPasswordResult = firebaseAuthRepositoroy.forgetPasswordResultLiveData
 
 
     // Function to handle user events
@@ -44,6 +35,7 @@ class AuthViewModel @Inject constructor(
                 val password = authEvents.password
                 val result = AuthValidator.ValidateSigninRequest(email, password)
                 if (result.successful) {
+                    // Sign in function call for firebase authentication
                     viewModelScope.launch {
                         firebaseAuthRepositoroy.signInWithEmailAndPassword(email, password)
                     }
@@ -59,6 +51,7 @@ class AuthViewModel @Inject constructor(
                 val result = AuthValidator.validateCreateUserRequest(authEvents.creatUserData)
                 if (result.successful) {
                     viewModelScope.launch {
+                        // Sign up function call for firebase authentication
                         firebaseAuthRepositoroy.createUserWithEmailAndPassword(
                             authEvents.creatUserData
                         )
@@ -72,44 +65,12 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-/*
-    // Function to sign in user
-    private fun SignIn(email: String, password: String) = viewModelScope.launch {
-        isLoading = true
-
-        val user = firebaseAuthPoint.signInWithEmailAndPassword(email, password)
-        if (user != null) {
-
-            isLoading = false
-            _state.send(AuthResult.OnSuccess("Sign in successful"))
-        } else {
-            isLoading = false
-            _state.send(AuthResult.OnError("Sign in failed"))
+    fun forgetPassword(email: String) {
+        viewModelScope.launch {
+            firebaseAuthRepositoroy.forgetPassword(email)
         }
     }
 
-
-    // Function to create user
-    private fun createUser(creatUserData: CreatUserData) = viewModelScope.launch {
-        isLoading = true
-
-        try {
-                firebaseAuthPoint.createUserWithEmailAndPassword(
-                    creatUserData.email,
-                    creatUserData.password
-                )
-
-
-             isLoading = false
-                _state.send(AuthResult.OnSuccess("User created successfully"))
-
-        } catch (e: Exception) {
-            isLoading = false
-            _state.send(AuthResult.OnError("Unable to create user, try again"))
-        }
-    }
-
-    */
 }
 
 

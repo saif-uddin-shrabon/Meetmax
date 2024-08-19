@@ -129,7 +129,7 @@ fun MiddleSection(
 
  val context = LocalContext.current
 
-    // for data collection or listening to the state
+    // for data collection or listening from livedata
     LaunchedEffect(loginResult) {
         when (loginResult) {
             is NetworkResult.Error -> {
