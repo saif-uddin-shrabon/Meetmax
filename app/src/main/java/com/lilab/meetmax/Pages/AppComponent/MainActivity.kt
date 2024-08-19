@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.lilab.meetmax.Pages.Navigation.Destination
 import com.lilab.meetmax.Pages.Navigation.MainNavigation
 import com.lilab.meetmax.ViewModel.AuthViewModel
+import com.lilab.meetmax.ViewModel.PostViewModel
 import com.lilab.meetmax.ui.theme.MeetmaxTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,11 +20,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val authViewModel: AuthViewModel by viewModels()
+        val postViewModel: PostViewModel by viewModels()
         setContent {
            MeetmaxTheme {
                Surface {
                    val navController = rememberNavController()
-                   MainNavigation(authViewModel = authViewModel, navController = navController, startDestination = Destination.Login )
+                   MainNavigation(authViewModel = authViewModel, postViewModel = postViewModel, navController = navController, startDestination = Destination.Login )
                }
            }
 

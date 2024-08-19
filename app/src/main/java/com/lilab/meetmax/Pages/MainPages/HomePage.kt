@@ -17,6 +17,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -28,17 +31,26 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.lilab.meetmax.Pages.AppComponent.NoPostFound
 import com.lilab.meetmax.Pages.AppComponent.PostItem
 import com.lilab.meetmax.Pages.AppComponent.PostSectionCard
 import com.lilab.meetmax.Pages.AppComponent.StoryComponent
 import com.lilab.meetmax.Pages.AppComponent.ToolbarSection
 import com.lilab.meetmax.R
+import com.lilab.meetmax.ViewModel.PostViewModel
+import com.lilab.meetmax.services.utils.NetworkResult
 import com.lilab.meetmax.ui.theme.LightColorScheme
+import kotlinx.coroutines.launch
 
 @Composable
-fun HomePage(modifier: Modifier = Modifier, navHostController: NavHostController) {
+fun HomePage(modifier: Modifier = Modifier, navHostController: NavHostController, postViewModel: PostViewModel) {
 
-    val state = rememberScrollState()
+
+    // Fetching all posts
+    postViewModel.getAllPosts()
+    val posts by postViewModel.postList.observeAsState()
+
+
    Scaffold {it ->
          Column(
               modifier = modifier
@@ -64,9 +76,21 @@ fun HomePage(modifier: Modifier = Modifier, navHostController: NavHostController
                     }
 
 
-                 items(10) {
-                     PostItem()
-                 }
+
+
+                    items(posts?.size ?: 0) { index ->
+                        if (index == 0 && posts == null) {
+                            NoPostFound()
+                        }else{
+                            posts?.get(index)?.let { it1 ->
+                                PostItem(
+                                    content = it1.content,
+                                    image = posts!![index].image
+                                )
+                            }
+                        }
+
+                    }
              }
 
 
@@ -117,6 +141,6 @@ fun SearchBar(){
 @Composable
 fun HomePagePreview() {
 //
-     val mockNavController = rememberNavController()
-    HomePage(navHostController = mockNavController)
+//     val mockNavController = rememberNavController()
+//     HomePage(navHostController = mockNavController)
 }

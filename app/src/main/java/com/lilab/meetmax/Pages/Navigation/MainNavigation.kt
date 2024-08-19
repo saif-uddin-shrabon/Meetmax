@@ -13,10 +13,11 @@ import com.lilab.meetmax.Pages.MainPages.CreatPost
 import com.lilab.meetmax.Pages.MainPages.HomePage
 import com.lilab.meetmax.Pages.MainPages.MainScreen
 import com.lilab.meetmax.ViewModel.AuthViewModel
+import com.lilab.meetmax.ViewModel.PostViewModel
 
 
 @Composable
-fun MainNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel, navController: NavHostController, startDestination: Destination) {
+fun MainNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel,postViewModel: PostViewModel, navController: NavHostController, startDestination: Destination) {
 
     val navController = rememberNavController()
 
@@ -51,16 +52,24 @@ fun MainNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel, 
 
         composable<Destination.MainScreen>{
             MainScreen(
-                navHostController = navController
+                navHostController = navController,
+                postViewModel = postViewModel
+
             )
         }
 
         composable<Destination.CreatPost>{
-            CreatPost(navController)
+            CreatPost(
+                navController,
+                postViewModel
+            )
         }
 
         composable<Destination.HomePage>{
-            HomePage(navHostController = navController)
+            HomePage(
+                navHostController = navController,
+                postViewModel = postViewModel
+            )
         }
 
 

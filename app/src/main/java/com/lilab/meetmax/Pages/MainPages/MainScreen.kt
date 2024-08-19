@@ -32,9 +32,10 @@ import androidx.navigation.compose.rememberNavController
 import com.lilab.meetmax.Pages.AuthPages.LoginPage
 import com.lilab.meetmax.Pages.Navigation.NavItem
 import com.lilab.meetmax.R
+import com.lilab.meetmax.ViewModel.PostViewModel
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier, navHostController: NavHostController) {
+fun MainScreen(modifier: Modifier = Modifier, navHostController: NavHostController,postViewModel: PostViewModel) {
     val navItems = listOf(
         NavItem("Feed", R.drawable.feed,0),
         NavItem("My Community", R.drawable.community,0),
@@ -96,15 +97,15 @@ fun MainScreen(modifier: Modifier = Modifier, navHostController: NavHostControll
             }
         }
     ) { innerPadding ->
-        ContentScreen(modifier = Modifier.padding(innerPadding),selectedIndex, navHostController = navHostController)
+        ContentScreen(modifier = Modifier.padding(innerPadding),selectedIndex, navHostController = navHostController, postViewModel = postViewModel)
     }
 
 }
 
 @Composable
-fun ContentScreen(modifier: Modifier = Modifier,selectedIndex : Int, navHostController: NavHostController) {
+fun ContentScreen(modifier: Modifier = Modifier,selectedIndex : Int, navHostController: NavHostController, postViewModel: PostViewModel) {
     when (selectedIndex) {
-        0 -> HomePage(navHostController= navHostController)
+        0 -> HomePage(navHostController= navHostController, postViewModel = postViewModel)
         1 -> MyCommunity()
         2 -> Explore()
         3 -> Notifications()

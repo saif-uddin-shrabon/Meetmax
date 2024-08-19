@@ -101,9 +101,16 @@ dependencies {
     //Coil
     implementation(libs.coil.compose)
 
-
-
     //Coroutines
+    implementation (libs.androidx.room.ktx)
+
+
+
+    //Room
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+    kapt(libs.androidx.room.compiler)
+
 
 
 

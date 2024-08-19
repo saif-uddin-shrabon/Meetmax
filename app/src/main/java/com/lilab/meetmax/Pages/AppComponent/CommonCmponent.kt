@@ -1,5 +1,6 @@
 package com.lilab.meetmax.Pages.AppComponent
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -47,6 +48,7 @@ import com.lilab.meetmax.R
 import com.lilab.meetmax.services.domain.AuthEvents
 import com.lilab.meetmax.ui.theme.IconDark
 import com.lilab.meetmax.ui.theme.LightColorScheme
+import com.lilab.meetmax.ui.theme.textColor
 
 @Composable
 fun Header(){
@@ -307,37 +309,6 @@ fun StaticSection(title: String, subtitle: String, newlineTex : String){
 }
 
 
-
-// Custom Button 1
-@Composable
-fun CustomButton(
-    modifier: Modifier = Modifier,
-    text: String,
-    onClick: () -> Unit,
-) {
-
-    Button(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(40.dp),
-        shape = RoundedCornerShape(7.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = LightColorScheme.primary,
-            contentColor = Color.White
-        ),
-
-                onClick = onClick
-    ) {
-
-
-            Text(text = text,fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
-                fontSize = 16.sp,
-            )
-
-    }
-}
-
-
 // Top profile , search and message section
 @Composable
 fun ToolbarSection() {
@@ -435,6 +406,54 @@ fun BasicTextFiledWithHint(
 }
 
 
+@Composable
+fun NoPostFound() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.nopostfound),
+            contentDescription = "No Post Found",
+            modifier = Modifier.size(200.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+
+        Column(
+            modifier = Modifier
+                        .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+
+
+            Text(
+                text =   "No Post Found!",
+                fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
+                fontSize = 16.sp,
+                lineHeight = 29.sp,
+                color = LightColorScheme.tertiary
+
+            )
+                Text(
+                    text = " Please post something to see here.",
+                    textAlign = TextAlign.Center,
+                    fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
+                    fontSize = 16.sp,
+                    lineHeight = 29.sp,
+                    color = LightColorScheme.tertiary,
+
+                    )
+
+
+        }
+
+
+    }
+}
 
 
 
@@ -446,7 +465,8 @@ fun HeaderLayout() {
 
 //    CustomButton(text = "Login", onClick = {}, modifier = Modifier.padding(16.dp).height(20.dp).width(10.dp))
 
-    StaticSection(title = "Login", subtitle ="Hello", newlineTex ="welcome")
+   // StaticSection(title = "Login", subtitle ="Hello", newlineTex ="welcome")
 
    // Header()
+    NoPostFound()
 }

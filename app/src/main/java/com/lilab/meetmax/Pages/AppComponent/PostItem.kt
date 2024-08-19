@@ -1,5 +1,6 @@
 package com.lilab.meetmax.Pages.AppComponent
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,11 +35,12 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.lilab.meetmax.R
 import com.lilab.meetmax.ui.theme.LightColorScheme
 
 @Composable
-fun PostItem() {
+fun PostItem(content: String, image: String?) {
          Surface(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -52,7 +54,7 @@ fun PostItem() {
              ) {
 
                  UserDetails()
-                 PostContetnt()
+                 PostContetnt(content = content, Image = image)
                  ReactionsSection()
                  ActionPerpormer()
                  Comments()
@@ -111,12 +113,14 @@ fun UserDetails(){
 }
 
 @Composable
-private fun PostContetnt() {
+private fun PostContetnt( content : String, Image: String?) {
 
     Spacer(modifier = Modifier.height(4.dp))
+    val imageUri = Uri.parse(Image)
 
     Text(
-        text = "If you think adventure is dangerous, try routine, it’s lethal Paulo Coelho! Good morning all friends.",
+       // text = "If you think adventure is dangerous, try routine, it’s lethal Paulo Coelho! Good morning all friends.",
+       text = content,
         fontFamily = FontFamily(Font(R.font.robotoregular, FontWeight.Normal)),
         fontSize = 14.sp,
         color = LightColorScheme.tertiary
@@ -125,7 +129,7 @@ private fun PostContetnt() {
     Spacer(modifier = Modifier.height(8.dp))
 
     Image(
-        painter = painterResource(id = R.drawable.profile),
+        painter = rememberAsyncImagePainter(imageUri),
         contentDescription = "profile",
 
         modifier = Modifier
@@ -331,5 +335,5 @@ fun Comments(){
 @Preview(showBackground = true, heightDp = 640, widthDp = 360)
 @Composable
 fun PostItemPreview() {
-    PostItem()
+    //PostItem()
 }
