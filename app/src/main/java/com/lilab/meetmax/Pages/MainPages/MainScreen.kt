@@ -3,9 +3,12 @@ package com.lilab.meetmax.Pages.MainPages
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,6 +17,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -32,11 +36,11 @@ import com.lilab.meetmax.R
 @Composable
 fun MainScreen(modifier: Modifier = Modifier, navHostController: NavHostController) {
     val navItems = listOf(
-        NavItem("Feed", R.drawable.feed),
-        NavItem("My Community", R.drawable.community),
-        NavItem("Explore", R.drawable.explore),
-        NavItem("Notification", R.drawable.notification),
-        NavItem("Settings", R.drawable.setting),
+        NavItem("Feed", R.drawable.feed,0),
+        NavItem("My Community", R.drawable.community,0),
+        NavItem("Explore", R.drawable.explore,0),
+        NavItem("Notification", R.drawable.notification,10),
+        NavItem("Settings", R.drawable.setting,0),
 
     )
 
@@ -47,12 +51,33 @@ fun MainScreen(modifier: Modifier = Modifier, navHostController: NavHostControll
     Scaffold(
         modifier = modifier.fillMaxSize(),
         bottomBar = {
-            NavigationBar {
+            NavigationBar{
                 navItems.forEachIndexed { index, navItem ->
                     NavigationBarItem(
                         selected = selectedIndex == index,
                         onClick = { selectedIndex = index },
                         icon = {
+                            BadgedBox(
+
+                                badge = {
+
+                                    if (navItem.badgeCount > 0) {
+                                        Badge(
+                                            containerColor = Color.Red
+                                        ) {
+                                            Text(
+                                                text = navItem.badgeCount.toString(),
+                                                color = Color.White,
+                                                fontSize = 10.sp
+                                            )
+                                        }
+                                    }
+
+                                }
+
+                            ) {
+                                
+                            }
                             Icon(
                                 painter = painterResource(id = navItem.icon),
                                 contentDescription = navItem.label,
@@ -64,7 +89,8 @@ fun MainScreen(modifier: Modifier = Modifier, navHostController: NavHostControll
                             fontFamily =  FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
                             fontSize = 5.sp
 
-                        ) }
+                        )
+                        },
                     )
                 }
             }

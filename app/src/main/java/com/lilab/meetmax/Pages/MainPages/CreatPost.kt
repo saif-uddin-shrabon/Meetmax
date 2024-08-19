@@ -18,9 +18,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -35,6 +38,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -60,7 +65,8 @@ fun CreatPost(navHostController: NavHostController) {
         modifier = Modifier.fillMaxSize()
     ) {
        Column(
-              modifier = Modifier.fillMaxSize(),
+              modifier = Modifier.fillMaxSize()
+                  .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.Top,
               horizontalAlignment = Alignment.CenterHorizontally
        ) {
@@ -82,7 +88,13 @@ fun CreatePostScreen(navHostController: NavHostController){
      ) {
             Spacer(modifier = Modifier.height(8.dp))
             HeadingSectionOfCreatPost(navHostController)
-            Spacer(modifier = Modifier.height(8.dp))
+
+             Divider(
+                 color = Color.Gray,
+                 thickness = 1.dp,
+                 modifier = Modifier.fillMaxWidth()
+             )
+            Spacer(modifier = Modifier.height(15.dp))
             PostContent()
             Spacer(modifier = Modifier.height(8.dp))
             ActionPerformer()
@@ -107,16 +119,16 @@ fun HeadingSectionOfCreatPost(navHostController: NavHostController){
     ){
 
         Icon(
-            painter = painterResource(id = R.drawable.back_arrow),
+            painter = painterResource(id = R.drawable.baseline_arrow_back_24),
             contentDescription = "Arrow Back",
             modifier = Modifier
                 .size(20.dp)
                 .clickable {
-                     navHostController.navigate(Destination.MainScreen){
-                            popUpTo(Destination.MainScreen) {
-                                inclusive = true
-                            }
-                     }
+                    navHostController.navigate(Destination.MainScreen) {
+                        popUpTo(Destination.MainScreen) {
+                            inclusive = true
+                        }
+                    }
 
                 }
         )
@@ -126,8 +138,8 @@ fun HeadingSectionOfCreatPost(navHostController: NavHostController){
         Text(
             text = "Creat a Post",
             fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
+             fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
+            color = LightColorScheme.tertiary
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -140,36 +152,36 @@ fun HeadingSectionOfCreatPost(navHostController: NavHostController){
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        Box(
-            modifier = Modifier
-                .height(32.dp)
-                .width(80.dp)
-                .background(LightColorScheme.background, RoundedCornerShape(8.dp)),
 
-            ){
             Row(
+                modifier = Modifier
+                    .height(32.dp)
+                    .width(80.dp)
+                    .background(LightColorScheme.background, RoundedCornerShape(8.dp)),
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "Friends",
                     fontSize = 12.sp,
                     color = LightColorScheme.secondary,
-                    modifier = Modifier.padding(8.dp)
                 )
+                Spacer(modifier = Modifier.width(4.dp))
                 Icon(
                     painter = painterResource(id = R.drawable.angle_down),
                     contentDescription = "Arrow Down",
                     modifier = Modifier
-                        .size(16.dp)
+                        .size(12.dp)
                 )
 
             }
-        }
+
         Spacer(modifier = Modifier.width(8.dp))
 
 
     }
 }
+
 
 
 @Composable
@@ -203,6 +215,7 @@ fun PostContent(){
                 textValue = it
                 isEnabled = true
             },
+
             isEnabled = {
                 isEnabled = it
             }

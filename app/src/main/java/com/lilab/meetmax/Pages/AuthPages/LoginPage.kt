@@ -90,6 +90,7 @@ fun LoginPage(
 
 
             Header()
+            Spacer(modifier = Modifier.height(16.dp))
             StaticSection(title = "Sign In", subtitle = "Welcome Back! You've been missed!" , newlineTex = "")
             MiddleSection(
                 navController = navController,

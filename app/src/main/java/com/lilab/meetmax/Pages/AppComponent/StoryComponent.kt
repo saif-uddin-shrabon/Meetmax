@@ -61,7 +61,8 @@ fun StoryComponent(imageUrl : String) {
                     Image(
                         painter = rememberAsyncImagePainter(imageUrl),
                         contentDescription = null,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize().
+                        clip(shape)
                     )
                 }
             }

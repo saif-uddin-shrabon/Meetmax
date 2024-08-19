@@ -52,16 +52,15 @@ fun HomePage(modifier: Modifier = Modifier, navHostController: NavHostController
              LazyColumn {
                     item{
                         ToolbarSection()
-                        Spacer(modifier = Modifier.height(10.dp))
+
                         LazyRow {
                             items(10) {
                                 StoryComponent("https://picsum.photos/200/300")
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(10.dp))
+                        Spacer(modifier = Modifier.height(7.dp))
                         PostSectionCard(navHostController)
-                        Spacer(modifier = Modifier.height(10.dp))
                     }
 
 
@@ -119,5 +118,5 @@ fun SearchBar(){
 fun HomePagePreview() {
 //
      val mockNavController = rememberNavController()
-   // HomePage()
+    HomePage(navHostController = mockNavController)
 }

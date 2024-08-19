@@ -224,5 +224,5 @@ fun PostSectionCard(navHostController: NavHostController){
 @Composable
 fun PostSectionCardPreview() {
     val mockNavController = rememberNavController()
-    //PostSectionCard()
+    PostSectionCard(mockNavController)
 }

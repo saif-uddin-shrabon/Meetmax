@@ -11,4 +11,5 @@
     <color name="linktextsecondary">#377DFF</color>
     <color name="containerbackground">#FFFFFF</color>
     <color name="textColor">#4E5D78</color>
+    <color name="textColorSecondary">#4E9DADBF</color>
 </resources>

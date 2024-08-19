@@ -113,11 +113,11 @@ fun UserDetails(){
 @Composable
 private fun PostContetnt() {
 
-    Spacer(modifier = Modifier.height(8.dp))
+    Spacer(modifier = Modifier.height(4.dp))
 
     Text(
         text = "If you think adventure is dangerous, try routine, it’s lethal Paulo Coelho! Good morning all friends.",
-        fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Normal)),
+        fontFamily = FontFamily(Font(R.font.robotoregular, FontWeight.Normal)),
         fontSize = 14.sp,
         color = LightColorScheme.tertiary
     )

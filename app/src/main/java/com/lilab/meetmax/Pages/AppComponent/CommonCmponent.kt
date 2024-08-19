@@ -1,5 +1,6 @@
 package com.lilab.meetmax.Pages.AppComponent
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -83,33 +84,29 @@ fun Header(){
 
         Card(
             elevation = CardDefaults.cardElevation(
-                defaultElevation = 2.dp,
+                defaultElevation = 5.dp,
             ),
 
             //redious
             shape = RoundedCornerShape(2.dp),
             colors = CardDefaults.cardColors(
-                containerColor = LightColorScheme.background
+                containerColor = Color.White
             ),
             modifier = Modifier
                 .width(126.dp)
                 .height(32.dp),
 
-
-
-
             ) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
+                    .fillMaxSize(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "English (UK)",
                     fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Normal)),
-                    fontSize = 13.sp,
+                    fontSize = 10.sp,
                     color = LightColorScheme.tertiary
                 )
                 Spacer(modifier = Modifier.padding(4.dp))
@@ -163,7 +160,7 @@ fun StaticSection(title: String, subtitle: String, newlineTex : String){
                 Text(
                     text = subtitle,
                     fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
-                    fontSize = 19.sp,
+                    fontSize = 16.sp,
                     lineHeight = 29.sp,
                     color = LightColorScheme.tertiary
 
@@ -174,7 +171,7 @@ fun StaticSection(title: String, subtitle: String, newlineTex : String){
                         text = newlineTex,
                         textAlign = TextAlign.Center,
                         fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
-                        fontSize = 19.sp,
+                        fontSize = 16.sp,
                         lineHeight = 29.sp,
                         color = LightColorScheme.tertiary,
 
@@ -184,6 +181,7 @@ fun StaticSection(title: String, subtitle: String, newlineTex : String){
             }
 
         }
+
 
         Row(
             modifier = Modifier
@@ -197,8 +195,9 @@ fun StaticSection(title: String, subtitle: String, newlineTex : String){
                     defaultElevation = 2.dp,
                 ),
                 modifier = Modifier
-                    .width(182.dp)
+                    .weight(1f)
                     .height(38.dp),
+
                 shape = RoundedCornerShape(3.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = LightColorScheme.background
@@ -210,19 +209,20 @@ fun StaticSection(title: String, subtitle: String, newlineTex : String){
                     modifier = Modifier
                         .padding(8.dp)
                         .fillMaxSize(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
+
                 ) {
 
                     Image(
                         painter = painterResource(id = R.drawable.google),
-                        contentDescription = "google Icon"
+                        contentDescription = "Google Icon"
                     )
                     Spacer(modifier = Modifier.padding(let { 4.dp }))
                     Text(
                         text = "Log in with Google",
                         fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
-                        fontSize = 16.sp,
+                        fontSize = 12.sp,
                         color = LightColorScheme.tertiary
                     )
 
@@ -230,13 +230,14 @@ fun StaticSection(title: String, subtitle: String, newlineTex : String){
                 }
             }
 
+            Spacer(modifier = Modifier.padding(8.dp))
             Card(
                 elevation = CardDefaults.cardElevation(
                     defaultElevation = 1.dp,
                 ),
                 shape = RoundedCornerShape(3.dp),
                 modifier = Modifier
-                    .width(182.dp)
+                    .weight(1f)
                     .height(38.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = LightColorScheme.background // Set the card background color here
@@ -247,7 +248,7 @@ fun StaticSection(title: String, subtitle: String, newlineTex : String){
                     modifier = Modifier
                         .padding(8.dp)
                         .fillMaxSize(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
 
                 ) {
@@ -260,7 +261,7 @@ fun StaticSection(title: String, subtitle: String, newlineTex : String){
                     Text(
                         text = "Log in with Apple",
                         fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
-                        fontSize = 16.sp,
+                        fontSize = 12.sp,
                         color = LightColorScheme.tertiary
                     )
 
@@ -327,6 +328,7 @@ fun CustomButton(
 
                 onClick = onClick
     ) {
+
 
             Text(text = text,fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
                 fontSize = 16.sp,
@@ -435,6 +437,8 @@ fun BasicTextFiledWithHint(
 
 
 
+
+
 @Preview(showBackground = true, widthDp = 360, heightDp = 640)
 @Composable
 fun HeaderLayout() {
@@ -442,4 +446,7 @@ fun HeaderLayout() {
 
 //    CustomButton(text = "Login", onClick = {}, modifier = Modifier.padding(16.dp).height(20.dp).width(10.dp))
 
+    StaticSection(title = "Login", subtitle ="Hello", newlineTex ="welcome")
+
+   // Header()
 }
