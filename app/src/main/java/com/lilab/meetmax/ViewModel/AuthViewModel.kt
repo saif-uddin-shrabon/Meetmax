@@ -5,23 +5,32 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lilab.meetmax.services.data.FirebseAuthPoint
 import com.lilab.meetmax.services.domain.AuthEvents
-import com.lilab.meetmax.services.domain.AuthResult
 import com.lilab.meetmax.services.domain.AuthValidator
-import com.lilab.meetmax.services.model.CreatUserData
+import com.lilab.meetmax.services.repository.FirebseAuthRepositoroy
+import com.lilab.meetmax.services.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(private val firebaseAuthPoint: FirebseAuthPoint) : ViewModel() {
+class AuthViewModel @Inject constructor(
+    private val firebaseAuthRepositoroy: FirebseAuthRepositoroy
+) : ViewModel() {
 
     // Channel to send events to the UI
-    private val _state = Channel<AuthResult>()
-    val stateFlow = _state.receiveAsFlow()
+//    private val _state = Channel<AuthResult>()
+//    val stateFlow = _state.receiveAsFlow()
+
+
+    // Live data
+    val loginResult = firebaseAuthRepositoroy.loginResultLiveData
+
+    val registerResult = firebaseAuthRepositoroy.registerResultLiveData
+
+
+
+
 
     var isLoading by mutableStateOf(false)
         private set
@@ -35,11 +44,13 @@ class AuthViewModel @Inject constructor(private val firebaseAuthPoint: FirebseAu
                 val password = authEvents.password
                 val result = AuthValidator.ValidateSigninRequest(email, password)
                 if (result.successful) {
-                    SignIn(email, password)
+                    viewModelScope.launch {
+                        firebaseAuthRepositoroy.signInWithEmailAndPassword(email, password)
+                    }
 
                 } else {
                     viewModelScope.launch {
-                        _state.send(AuthResult.OnError(result.error!!))
+                        firebaseAuthRepositoroy._loginResultLiveData.postValue(NetworkResult.Error(result.error!!))
                     }
                 }
             }
@@ -47,17 +58,21 @@ class AuthViewModel @Inject constructor(private val firebaseAuthPoint: FirebseAu
             is AuthEvents.OnRegister -> {
                 val result = AuthValidator.validateCreateUserRequest(authEvents.creatUserData)
                 if (result.successful) {
-                    createUser(authEvents.creatUserData)
+                    viewModelScope.launch {
+                        firebaseAuthRepositoroy.createUserWithEmailAndPassword(
+                            authEvents.creatUserData
+                        )
+                    }
                 } else {
                     viewModelScope.launch {
-                        _state.send(AuthResult.OnError(result.error!!))
+                        firebaseAuthRepositoroy._registerResultLiveData.postValue(NetworkResult.Error(result.error!!))
                     }
                 }
             }
         }
     }
 
-
+/*
     // Function to sign in user
     private fun SignIn(email: String, password: String) = viewModelScope.launch {
         isLoading = true
@@ -93,6 +108,8 @@ class AuthViewModel @Inject constructor(private val firebaseAuthPoint: FirebseAu
             _state.send(AuthResult.OnError("Unable to create user, try again"))
         }
     }
+
+    */
 }
 
 

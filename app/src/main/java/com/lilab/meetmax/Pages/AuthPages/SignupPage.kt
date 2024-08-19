@@ -1,6 +1,7 @@
 package com.lilab.meetmax.Pages.AuthPages
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,8 +23,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -39,6 +43,7 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -62,17 +67,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.lilab.meetmax.Pages.AppComponent.CustomButton
 import com.lilab.meetmax.Pages.AppComponent.Header
 import com.lilab.meetmax.Pages.AppComponent.StaticSection
 import com.lilab.meetmax.Pages.Navigation.Destination
 import com.lilab.meetmax.R
 import com.lilab.meetmax.ViewModel.AuthViewModel
 import com.lilab.meetmax.services.domain.AuthEvents
-import com.lilab.meetmax.services.domain.AuthResult
 import com.lilab.meetmax.services.model.CreatUserData
+import com.lilab.meetmax.services.utils.NetworkResult
 import com.lilab.meetmax.ui.theme.LightColorScheme
-import kotlinx.coroutines.flow.collectLatest
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -142,24 +145,42 @@ fun SignpuFuntionalSection(
 
     val context = LocalContext.current
 
+    val signinResult by signinViewModel.registerResult.observeAsState(null)
+    var isLoading by remember { mutableStateOf(false) }
+
     // for data collection or listening to the state
-    LaunchedEffect(key1 = true) {
-        signinViewModel.stateFlow.collectLatest {events: AuthResult ->
-            when (events) {
-                is AuthResult.OnError -> {
-                    Toast.makeText(context, events.message, Toast.LENGTH_SHORT).show()
-                }
-                is AuthResult.OnSuccess -> {
-                    Toast.makeText(context, "Sign Up Successful", Toast.LENGTH_SHORT).show()
-                    navController.navigate(Destination.Login){
-                        popUpTo(Destination.Login){
+    LaunchedEffect(signinResult) {
+        when (signinResult) {
+            is NetworkResult.Error -> {
+                Toast.makeText(context, signinResult!!.message, Toast.LENGTH_SHORT).show()
+                isLoading = false
+            }
+
+            is NetworkResult.Loading -> {
+                isLoading = true
+
+            }
+
+            is NetworkResult.Success -> {
+
+                if (signinResult!!.data != null){
+
+                    Toast.makeText(context, "Sign in Successful", Toast.LENGTH_SHORT).show()
+                    navController.navigate(Destination.MainScreen) {
+                        popUpTo(Destination.Login) {
                             inclusive = true
                         }
                     }
                 }
 
+                isLoading = false
+
+
             }
+
+            null -> {}
         }
+
     }
 
     Column(
@@ -281,26 +302,52 @@ fun SignpuFuntionalSection(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // SignUp buttom from Common component
-        CustomButton(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp),
-            text = "Sign Up",
-            isLoading = signinViewModel.isLoading,
-        ){
-            val createUserDate = CreatUserData(
-                email = email,
-                fullName = name,
-                password = password,
-                DOB = selectedDate.toString().trim(),
-                gender = selectedGender.toString().trim()
-            )
 
-            signinViewModel.UserEventState(
-                AuthEvents.OnRegister(
-                    createUserDate
+
+        AnimatedVisibility(!isLoading) {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(53.dp),
+                shape = RoundedCornerShape(7.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = LightColorScheme.primary,
+                    contentColor = Color.White
+                ),
+                onClick = {
+
+
+                    val createUserDate = CreatUserData(
+                        email = email,
+                        fullName = name,
+                        password = password,
+                        DOB = selectedDate.toString().trim(),
+                        gender = selectedGender.toString().trim()
+                    )
+
+                    signinViewModel.UserEventState(
+                        AuthEvents.OnRegister(
+                            createUserDate
+                        )
+                    )
+
+                    isLoading = true
+                },
+            ) {
+                Text(
+                    modifier = Modifier.padding(vertical = 5.dp),
+                    text = "Sign Up",
+                    fontSize = 16.sp
                 )
+            }
+
+        }
+
+        if (isLoading) {
+            Spacer(modifier = Modifier.height(5.dp))
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                color = Color.Black,
             )
         }
 

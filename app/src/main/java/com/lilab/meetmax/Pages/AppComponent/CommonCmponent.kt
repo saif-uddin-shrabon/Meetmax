@@ -307,36 +307,6 @@ fun StaticSection(title: String, subtitle: String, newlineTex : String){
 
 
 
-// Custom Button 1
-@Composable
-fun CustomButton(
-    modifier: Modifier = Modifier,
-    text: String,
-    isLoading: Boolean = false,
-    onClick: () -> Unit,
-) {
-
-    Button(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(40.dp),
-        shape = RoundedCornerShape(7.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = LightColorScheme.primary,
-            contentColor = Color.White
-        ),
-
-                onClick = onClick
-    ) {
-        if (isLoading) {
-            CircularProgressIndicator(color = IconDark)
-        } else {
-            Text(text = text,fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
-                fontSize = 16.sp,
-            )
-        }
-    }
-}
 
 
 // Top profile , search and message section

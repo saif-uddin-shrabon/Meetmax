@@ -1,55 +1,85 @@
 package com.lilab.meetmax.services.repository
 
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.UserProfileChangeRequest
-import com.lilab.meetmax.services.data.FirebseAuthPoint
-import com.lilab.meetmax.services.utils.await
+import com.google.firebase.database.DatabaseReference
+import com.lilab.meetmax.services.model.CreatUserData
+import com.lilab.meetmax.services.utils.NetworkResult
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class FirebseAuthRepositoroy @Inject constructor (
-    private val firebseendEndPoint: FirebaseAuth
-) : FirebseAuthPoint {
+    private val firbaseAuth: FirebaseAuth,
+    private val firebaseDatabase: DatabaseReference,
+    @ApplicationContext val context: android.content.Context,
+)  {
+
+     val _loginResultLiveData = MutableLiveData<NetworkResult<FirebaseUser>>()
+     val _registerResultLiveData = MutableLiveData<NetworkResult<FirebaseUser>>()
+
+    val loginResultLiveData: LiveData<NetworkResult<FirebaseUser>>
+        get() = _loginResultLiveData
+    val registerResultLiveData: LiveData<NetworkResult<FirebaseUser>>
+        get() = _registerResultLiveData
+
+
 
     // For creating user
-    override suspend fun createUserWithEmailAndPassword(
-        email: String,
-        password: String
-    ): FirebaseUser? {
+      suspend fun createUserWithEmailAndPassword(
+       creatUserData: CreatUserData
+    ) {
+
+
+
+        _registerResultLiveData.postValue(NetworkResult.Loading())
+
         try {
-            val result = firebseendEndPoint.createUserWithEmailAndPassword(email, password).await()
-            result.user?.updateProfile(UserProfileChangeRequest.Builder().setDisplayName("User").build())
-            return result.user
+
+
+            val result = firbaseAuth.createUserWithEmailAndPassword(creatUserData.email, creatUserData.password).await()
+
+            val user  = result.user
+
+
+               firebaseDatabase.child("Users").child(user?.uid.toString()).setValue(creatUserData)
+
+
+
+
+            _registerResultLiveData.postValue(NetworkResult.Success(result.user!!))
+
+
         }catch (
             e: Exception
         ){
             e.printStackTrace()
-            return null
+            _registerResultLiveData.postValue(NetworkResult.Error(e.localizedMessage) )
         }
     }
 
 
     // For signing in user
-    override suspend fun signInWithEmailAndPassword(
+     suspend fun signInWithEmailAndPassword(
         email: String,
         password: String
-    ): FirebaseUser? {
+    ) {
+        _loginResultLiveData.postValue(NetworkResult.Loading())
         try {
-            val result = firebseendEndPoint.signInWithEmailAndPassword(email, password).await()
-            return result.user
+            val result = firbaseAuth.signInWithEmailAndPassword(email, password).await()
+
+            _loginResultLiveData.postValue(NetworkResult.Success(result.user!!))
+
         }catch (
             e: Exception
         ){
             e.printStackTrace()
-            return null
+            _registerResultLiveData.postValue(NetworkResult.Error(e.localizedMessage) )
+
         }
     }
 
-//    override suspend fun checkUsernameAvailability(username: String): Boolean {
-//
-//    }
-//
-//    override suspend fun saveUserData(createUserData: CreatUserData): FirebaseUser? {
-//
-//    }
 }

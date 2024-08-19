@@ -2,6 +2,7 @@ package com.lilab.meetmax.Pages.AuthPages
 
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,13 +13,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -28,6 +33,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -48,16 +54,15 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.lilab.meetmax.Pages.AppComponent.CustomButton
 import com.lilab.meetmax.Pages.AppComponent.Header
 import com.lilab.meetmax.Pages.AppComponent.StaticSection
 import com.lilab.meetmax.Pages.Navigation.Destination
 import com.lilab.meetmax.R
 import com.lilab.meetmax.ViewModel.AuthViewModel
 import com.lilab.meetmax.services.domain.AuthEvents
-import com.lilab.meetmax.services.domain.AuthResult
+import com.lilab.meetmax.services.utils.NetworkResult
 import com.lilab.meetmax.ui.theme.LightColorScheme
-import kotlinx.coroutines.flow.collectLatest
+
 
 
 @Composable
@@ -119,26 +124,44 @@ fun MiddleSection(
     }
     var checked by remember { mutableStateOf(false) }
 
+    val loginResult by signinViewModel.loginResult.observeAsState(null)
+    var isLoading by remember { mutableStateOf(false) }
+
  val context = LocalContext.current
 
     // for data collection or listening to the state
-    LaunchedEffect(key1 = true) {
-        signinViewModel.stateFlow.collectLatest {events:AuthResult ->
-            when (events) {
-                is AuthResult.OnError -> {
-                    Toast.makeText(context, events.message, Toast.LENGTH_SHORT).show()
-                }
-                is AuthResult.OnSuccess -> {
+    LaunchedEffect(loginResult) {
+        when (loginResult) {
+            is NetworkResult.Error -> {
+                Toast.makeText(context, loginResult!!.message, Toast.LENGTH_SHORT).show()
+                isLoading = false
+            }
+
+            is NetworkResult.Loading -> {
+                isLoading = true
+
+            }
+
+            is NetworkResult.Success -> {
+
+                if (loginResult!!.data != null){
+
                     Toast.makeText(context, "Sign in Successful", Toast.LENGTH_SHORT).show()
-                    navController.navigate(Destination.MainScreen){
-                        popUpTo(Destination.Login){
+                    navController.navigate(Destination.MainScreen) {
+                        popUpTo(Destination.Login) {
                             inclusive = true
                         }
                     }
                 }
 
+                isLoading = false
+
+
             }
+
+            null -> {}
         }
+
     }
 
     Column(
@@ -254,22 +277,48 @@ fun MiddleSection(
 
 
         Spacer(modifier = Modifier.height(16.dp))
-        // Sign In button from Common component
-        CustomButton(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp),
-            text = "Sign In",
-            isLoading = signinViewModel.isLoading,
-        ){
-            signinViewModel.UserEventState(
-                AuthEvents.OnLogin(
-                    email = email.trim(),
-                    password = password.trim(),
+
+
+        // Sign In button with loading state
+
+        AnimatedVisibility(!isLoading) {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(53.dp),
+                shape = RoundedCornerShape(7.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = LightColorScheme.primary,
+                    contentColor = Color.White
+                ),
+                onClick = {
+
+                    signinViewModel.UserEventState(
+                        AuthEvents.OnLogin(
+                            email = email.trim(),
+                            password = password.trim(),
+                        )
+                    )
+
+                    isLoading = true
+                },
+            ) {
+                Text(
+                    modifier = Modifier.padding(vertical = 5.dp),
+                    text = "Log in",
+                    fontSize = 16.sp
                 )
-            )
+            }
+
         }
 
+        if (isLoading) {
+            Spacer(modifier = Modifier.height(5.dp))
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                color = Color.Black,
+            )
+        }
 
 
 
