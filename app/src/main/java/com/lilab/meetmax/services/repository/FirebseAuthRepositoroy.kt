@@ -13,6 +13,7 @@ import com.lilab.meetmax.services.model.Response
 import com.lilab.meetmax.services.utils.NetworkResult
 import com.lilab.meetmax.services.utils.SharedPref
 import com.lilab.meetmax.services.utils.SharedPref.getUserId
+import com.lilab.meetmax.services.utils.SharedPref.storeData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -88,31 +89,14 @@ class FirebseAuthRepositoroy @Inject constructor (
         try {
             val result = firbaseAuth.signInWithEmailAndPassword(email, password).await()
 
-            if (remember && result.user != null) {
-                try {
-                    val userId = result.user!!.uid
-
-                    val userResponse = firebaseDatabase.database.getReference("Users").child(userId).get().await()
-
-                    if (userResponse.exists()) {
-                        val user = userResponse.getValue(CreatUserData::class.java)
-                        if (user != null) {
-                            user.fullName?.let { SharedPref.storeData(userId, it, context) }
-                           // Log.d("UserPref", "CheckPref: ${getUserId(context)}")
-                        }
-                    }
-                } catch (e: Exception) {
-                    Log.e("FirebaseError", "Error fetching user data", e)
-                }
-            }
-
+            storeData(result.user!!.uid.toString(),context)
             _loginResultLiveData.postValue(NetworkResult.Success(result.user!!))
 
         }catch (
             e: Exception
         ){
             e.printStackTrace()
-            _registerResultLiveData.postValue(NetworkResult.Error(e.localizedMessage) )
+            _loginResultLiveData.postValue(NetworkResult.Error(e.localizedMessage) )
 
         }
     }

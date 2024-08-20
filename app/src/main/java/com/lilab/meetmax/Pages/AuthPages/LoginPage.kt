@@ -56,6 +56,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.lilab.meetmax.Pages.AppComponent.Header
 import com.lilab.meetmax.Pages.AppComponent.StaticSection
+import com.lilab.meetmax.Pages.AppComponent.WarningDialog
 import com.lilab.meetmax.Pages.Navigation.Destination
 import com.lilab.meetmax.R
 import com.lilab.meetmax.ViewModel.AuthViewModel
@@ -127,15 +128,22 @@ fun MiddleSection(
 
     val loginResult by signinViewModel.loginResult.observeAsState(null)
     var isLoading by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
+    var dialogMessage by remember { mutableStateOf("") }
 
- val context = LocalContext.current
+    val context = LocalContext.current
 
     // for data collection or listening from livedata
     LaunchedEffect(loginResult) {
         when (loginResult) {
             is NetworkResult.Error -> {
-                Toast.makeText(context, loginResult!!.message, Toast.LENGTH_SHORT).show()
+                //Toast.makeText(context, loginResult!!.message, Toast.LENGTH_SHORT).show()
+                dialogMessage = loginResult!!.message.toString() ?: "An error occurred"
                 isLoading = false
+                showDialog = true
+
+                //for clear warning message
+                signinViewModel.resetLiveData()
             }
 
             is NetworkResult.Loading -> {
@@ -144,6 +152,8 @@ fun MiddleSection(
             }
 
             is NetworkResult.Success -> {
+
+                isLoading = false
 
                 if (loginResult!!.data != null){
 
@@ -155,7 +165,6 @@ fun MiddleSection(
                     }
                 }
 
-                isLoading = false
 
 
             }
@@ -163,6 +172,15 @@ fun MiddleSection(
             null -> {}
         }
 
+    }
+
+    // Dialog for warning
+    if(showDialog){
+        WarningDialog(
+            title = "Warning",
+            message = dialogMessage,
+            onConfirm = { showDialog = false }
+        )
     }
 
     Column(
@@ -186,6 +204,7 @@ fun MiddleSection(
                     tint = Color.Gray
                 )
             },
+            singleLine = true,
 
         )
 
@@ -203,6 +222,7 @@ fun MiddleSection(
             onValueChange = {
                 password = it
             },
+            singleLine = true,
             leadingIcon = {
                 Icon(
                     painter = painterResource(id = R.drawable.lock),

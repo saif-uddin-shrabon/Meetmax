@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -28,6 +29,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -410,7 +412,8 @@ fun BasicTextFiledWithHint(
 fun NoPostFound() {
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxWidth()
+            .padding(8.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -455,6 +458,45 @@ fun NoPostFound() {
     }
 }
 
+//Dialog box
+@Composable
+fun WarningDialog(
+    title: String,
+    message: String,
+    onConfirm: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = {},
+        title = {
+            Text(
+                text = title,
+                fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
+                fontSize = 18.sp,
+                color = Color.Red
+            )
+        },
+        text = {
+            Text(
+                text = message,
+                fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
+                fontSize = 16.sp,
+                color = Color.Gray
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm() }
+            ) {
+                Text(
+                    text = "Ok",
+                    fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
+                    color = Color.Red
+                )
+            }
+        }
+    )
+}
+
 
 
 
@@ -468,5 +510,7 @@ fun HeaderLayout() {
    // StaticSection(title = "Login", subtitle ="Hello", newlineTex ="welcome")
 
    // Header()
-    NoPostFound()
+    //NoPostFound()
+
+    WarningDialog(title = "Warning", message = "Are you sure you want to delete this post?",  onConfirm = {})
 }

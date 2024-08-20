@@ -67,9 +67,10 @@ fun MainNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel,p
 
         composable<Destination.HomePage>{
             HomePage(
-                navHostController = navController,
-                postViewModel = postViewModel
+                navHostController = navController,postViewModel = postViewModel
+
             )
+
         }
 
 

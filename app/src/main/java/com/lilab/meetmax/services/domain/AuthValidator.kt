@@ -9,6 +9,8 @@ object AuthValidator {
             val password = createUserData.password
             val email = createUserData.email
             val fullName = createUserData.fullName
+            val DOB = createUserData.DOB
+            val gender = createUserData.gender
     
             if (username!!.isBlank() && password!!.isBlank() && email!!.isBlank() && fullName!!.isBlank()) {
                 return ValidateResult(
@@ -56,6 +58,17 @@ object AuthValidator {
                 return ValidateResult(
                     successful = false,
                     error = "Password cannot be blank"
+                )
+            }
+            if (DOB!!.isBlank()) {
+                return ValidateResult(
+                    successful = false,
+                    error = "DOB cannot be blank"
+                )
+            }
+            if (gender!!.isBlank()) {
+                return ValidateResult(
+                    successful = false,
                 )
             }
             return ValidateResult(successful = true)

@@ -105,7 +105,8 @@ fun MainScreen(modifier: Modifier = Modifier, navHostController: NavHostControll
 @Composable
 fun ContentScreen(modifier: Modifier = Modifier,selectedIndex : Int, navHostController: NavHostController, postViewModel: PostViewModel) {
     when (selectedIndex) {
-        0 -> HomePage(navHostController= navHostController, postViewModel = postViewModel)
+       0 -> HomePage(navHostController= navHostController, postViewModel = postViewModel)
+       // 0 -> HomePage(navHostController= navHostController)
         1 -> MyCommunity()
         2 -> Explore()
         3 -> Notifications()

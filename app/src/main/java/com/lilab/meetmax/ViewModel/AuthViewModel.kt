@@ -26,6 +26,12 @@ class AuthViewModel @Inject constructor(
 
     val forgetPasswordResult = firebaseAuthRepositoroy.forgetPasswordResultLiveData
 
+    fun resetLiveData() {
+        firebaseAuthRepositoroy._loginResultLiveData.value = null
+        firebaseAuthRepositoroy._registerResultLiveData.value = null
+        firebaseAuthRepositoroy._forgetPasswordResultLiveData.value = null
+    }
+
 
     // Function to handle user events
     fun UserEventState(authEvents: AuthEvents) {
@@ -43,6 +49,7 @@ class AuthViewModel @Inject constructor(
 
                 } else {
                     viewModelScope.launch {
+                        // validation error
                         firebaseAuthRepositoroy._loginResultLiveData.postValue(NetworkResult.Error(result.error!!))
                     }
                 }
@@ -71,6 +78,8 @@ class AuthViewModel @Inject constructor(
             firebaseAuthRepositoroy.forgetPassword(email)
         }
     }
+
+
 
 }
 

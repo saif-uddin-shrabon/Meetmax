@@ -69,6 +69,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.lilab.meetmax.Pages.AppComponent.Header
 import com.lilab.meetmax.Pages.AppComponent.StaticSection
+import com.lilab.meetmax.Pages.AppComponent.WarningDialog
 import com.lilab.meetmax.Pages.Navigation.Destination
 import com.lilab.meetmax.R
 import com.lilab.meetmax.ViewModel.AuthViewModel
@@ -115,7 +116,7 @@ fun SignupPage(
 @Composable
 fun SignpuFuntionalSection(
     navController: NavController,
-    signinViewModel: AuthViewModel
+    signupViewModel: AuthViewModel
 ) {
 
 
@@ -145,15 +146,22 @@ fun SignpuFuntionalSection(
 
     val context = LocalContext.current
 
-    val signinResult by signinViewModel.registerResult.observeAsState(null)
+    val signinResult by signupViewModel.registerResult.observeAsState(null)
     var isLoading by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
+    var dialogMessage by remember { mutableStateOf("") }
 
     // for data collection or listening to the state
     LaunchedEffect(signinResult) {
         when (signinResult) {
             is NetworkResult.Error -> {
-                Toast.makeText(context, signinResult!!.message, Toast.LENGTH_SHORT).show()
+             //  Toast.makeText(context, signinResult!!.message, Toast.LENGTH_SHORT).show()
+                dialogMessage = signinResult!!.message.toString() ?: "An error occurred"
+                showDialog = true
                 isLoading = false
+
+                // Clear warning dialog
+                signupViewModel.resetLiveData()
             }
 
             is NetworkResult.Loading -> {
@@ -182,6 +190,14 @@ fun SignpuFuntionalSection(
         }
 
     }
+    // Dialog for error message
+    if(showDialog){
+        WarningDialog(
+            title = "Warning",
+            message = dialogMessage,
+            onConfirm = { showDialog = false }
+        )
+    }
 
     Column(
         modifier = Modifier.padding(top = 20.dp),
@@ -195,6 +211,7 @@ fun SignpuFuntionalSection(
             modifier = Modifier.fillMaxWidth(),
             value = email,
             onValueChange = { email = it },
+            singleLine = true,
             label = {
                 Text(
                     text = "Your Email",
@@ -219,6 +236,7 @@ fun SignpuFuntionalSection(
             modifier = Modifier.fillMaxWidth(),
             value = name,
             onValueChange = { name = it },
+            singleLine = true,
             label = {
                 Text(
                     text = "Your Name",
@@ -241,6 +259,7 @@ fun SignpuFuntionalSection(
         // TextField for Password
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
             label = {
                 Text(
                     "Password", fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
@@ -325,7 +344,7 @@ fun SignpuFuntionalSection(
                         gender = selectedGender.toString().trim()
                     )
 
-                    signinViewModel.UserEventState(
+                    signupViewModel.UserEventState(
                         AuthEvents.OnRegister(
                             createUserDate
                         )

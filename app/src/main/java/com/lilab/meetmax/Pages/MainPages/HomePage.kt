@@ -20,14 +20,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -36,19 +41,39 @@ import com.lilab.meetmax.Pages.AppComponent.PostItem
 import com.lilab.meetmax.Pages.AppComponent.PostSectionCard
 import com.lilab.meetmax.Pages.AppComponent.StoryComponent
 import com.lilab.meetmax.Pages.AppComponent.ToolbarSection
+import com.lilab.meetmax.Pages.AppComponent.WarningDialog
 import com.lilab.meetmax.R
+import com.lilab.meetmax.ViewModel.AuthViewModel
 import com.lilab.meetmax.ViewModel.PostViewModel
+//import com.lilab.meetmax.ViewModel.PostViewModel
 import com.lilab.meetmax.services.utils.NetworkResult
+import com.lilab.meetmax.services.utils.SharedPref
 import com.lilab.meetmax.ui.theme.LightColorScheme
+import com.lilab.meetmax.ui.theme.MeetmaxTheme
 import kotlinx.coroutines.launch
 
 @Composable
 fun HomePage(modifier: Modifier = Modifier, navHostController: NavHostController, postViewModel: PostViewModel) {
 
 
+
     // Fetching all posts
     postViewModel.getAllPosts()
     val posts by postViewModel.postList.observeAsState()
+
+    var showDialog by remember { mutableStateOf(false) }
+    var dialogMessage by remember { mutableStateOf("") }
+
+    var ShowPost by remember { mutableStateOf(false) }
+
+    println("User Pref ID 2: ${SharedPref.getUserId(LocalContext.current)}")
+
+
+    // Count of posts
+    val postCount = posts?.size ?: 0
+    if (postCount > 0) {
+        ShowPost = true
+    }
 
 
    Scaffold {it ->
@@ -73,24 +98,37 @@ fun HomePage(modifier: Modifier = Modifier, navHostController: NavHostController
 
                         Spacer(modifier = Modifier.height(7.dp))
                         PostSectionCard(navHostController)
-                    }
-
-
-
-
-                    items(posts?.size ?: 0) { index ->
-                        if (index == 0 && posts == null) {
+                        if (!ShowPost){
                             NoPostFound()
-                        }else{
-                            posts?.get(index)?.let { it1 ->
-                                PostItem(
-                                    content = it1.content,
-                                    image = posts!![index].image
-                                )
-                            }
                         }
 
                     }
+
+
+
+                 if(ShowPost){
+                     items(posts?.size ?: 0) { index ->
+                         posts?.get(index)?.let { it1 ->
+                             PostItem(
+                                 content = it1.content,
+                                 image = posts!![index].image
+                             )
+                         }
+
+                     }
+
+                 }
+
+
+             }
+
+             // Dialog for warning
+             if(showDialog){
+                 WarningDialog(
+                     title = "Warning",
+                     message = dialogMessage,
+                     onConfirm = { showDialog = false }
+                 )
              }
 
 
@@ -137,10 +175,12 @@ fun SearchBar(){
 
 }
 
-@Preview(showBackground = true,  widthDp = 360, heightDp = 640)
+@Preview(showBackground = true,  widthDp = 360, heightDp = 640, apiLevel = 33)
 @Composable
 fun HomePagePreview() {
 //
-//     val mockNavController = rememberNavController()
-//     HomePage(navHostController = mockNavController)
+     val mockNavController = rememberNavController()
+   // val postViewModel = viewModel<PostViewModel>()
+     //HomePage(navHostController = mockNavController)
+
 }

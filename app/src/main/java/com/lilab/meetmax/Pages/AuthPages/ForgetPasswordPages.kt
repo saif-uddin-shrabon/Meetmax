@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.lilab.meetmax.Pages.AppComponent.Header
 import com.lilab.meetmax.Pages.AppComponent.StaticSection
+import com.lilab.meetmax.Pages.AppComponent.WarningDialog
 import com.lilab.meetmax.Pages.Navigation.Destination
 import com.lilab.meetmax.R
 import com.lilab.meetmax.ViewModel.AuthViewModel
@@ -59,7 +60,7 @@ fun ForgetPasswordPage(
     navController: NavController,
     forgetPasswordViewModel: AuthViewModel
 
-                       ) {
+) {
     Surface(
         modifier = modifier
             .fillMaxSize()
@@ -151,6 +152,8 @@ fun ForgetPassFuntionality(navController: NavController,forgetPasswordViewModel:
         Spacer(modifier = Modifier.height(16.dp))
 
         // Sign In button with loading state
+        var showDialog by remember { mutableStateOf(false) }
+        var dialogMessage by remember { mutableStateOf("") }
 
         AnimatedVisibility(!isLoading) {
             Button(
@@ -165,7 +168,11 @@ fun ForgetPassFuntionality(navController: NavController,forgetPasswordViewModel:
                 onClick = {
 
                     if (email.isEmpty()) {
-                        Toast.makeText(context, "Please enter your email", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(context, "Please enter your email", Toast.LENGTH_SHORT).show()
+                        dialogMessage = "Please enter your email"
+                        showDialog = true
+
+
                         return@Button
                     }else{
                         forgetPasswordViewModel.forgetPassword(email.trim())
@@ -183,6 +190,7 @@ fun ForgetPassFuntionality(navController: NavController,forgetPasswordViewModel:
 
         }
 
+        // Loading indicator
         if (isLoading) {
             Spacer(modifier = Modifier.height(5.dp))
             CircularProgressIndicator(
@@ -190,6 +198,16 @@ fun ForgetPassFuntionality(navController: NavController,forgetPasswordViewModel:
                 color = Color.Black,
             )
         }
+
+        // Dialog for warning
+        if(showDialog){
+            WarningDialog(
+                title = "Warning",
+                message = dialogMessage,
+                onConfirm = { showDialog = false }
+            )
+        }
+
 
 
         Spacer(modifier = Modifier.height(8.dp))
