@@ -174,8 +174,8 @@ fun SignpuFuntionalSection(
                 if (signinResult!!.data != null){
 
                     Toast.makeText(context, "Sign in Successful", Toast.LENGTH_SHORT).show()
-                    navController.navigate(Destination.MainScreen) {
-                        popUpTo(Destination.Login) {
+                    navController.navigate(Destination.Login) {
+                        popUpTo(Destination.Signup) {
                             inclusive = true
                         }
                     }
