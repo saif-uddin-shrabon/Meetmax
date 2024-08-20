@@ -36,6 +36,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.lilab.meetmax.Pages.AppComponent.EventSection
 import com.lilab.meetmax.Pages.AppComponent.NoPostFound
 import com.lilab.meetmax.Pages.AppComponent.PostItem
 import com.lilab.meetmax.Pages.AppComponent.PostSectionCard
@@ -106,10 +107,17 @@ fun HomePage(modifier: Modifier = Modifier, navHostController: NavHostController
                  if(ShowPost){
                      items(posts?.size ?: 0) { index ->
                          posts?.get(index)?.let { it1 ->
-                             PostItem(
-                                 content = it1.content,
-                                 image = posts!![index].image
-                             )
+                             if(!it1.postType) {
+                                 PostItem(
+                                     content = it1.content,
+                                     image = posts!![index].image
+                                 )
+                             }else {
+                                 EventSection(
+                                     content = it1.content,
+                                     title = it1.title
+                                 )
+                             }
 
                          }
 

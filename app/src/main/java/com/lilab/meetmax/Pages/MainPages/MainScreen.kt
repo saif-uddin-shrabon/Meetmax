@@ -1,6 +1,7 @@
 package com.lilab.meetmax.Pages.MainPages
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Badge
@@ -16,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -40,7 +42,7 @@ fun MainScreen(modifier: Modifier = Modifier, navHostController: NavHostControll
         NavItem("Feed", R.drawable.feed,0),
         NavItem("Community", R.drawable.community,0),
         NavItem("Explore", R.drawable.explore,0),
-        NavItem("Notification", R.drawable.notification,10),
+        NavItem("Notification", R.drawable.notification,2),
         NavItem("Settings", R.drawable.setting,0),
 
     )
@@ -64,12 +66,14 @@ fun MainScreen(modifier: Modifier = Modifier, navHostController: NavHostControll
 
                                     if (navItem.badgeCount > 0) {
                                         Badge(
+                                            modifier = Modifier.size(20.dp)
+                                                .offset(x = 4.dp, y = (-4).dp),
                                             containerColor = Color.Red
                                         ) {
                                             Text(
                                                 text = navItem.badgeCount.toString(),
                                                 color = Color.White,
-                                                fontSize = 12.sp
+                                                fontSize = 9.sp,
                                             )
                                         }
                                     }
@@ -77,13 +81,13 @@ fun MainScreen(modifier: Modifier = Modifier, navHostController: NavHostControll
                                 }
 
                             ) {
-                                
+                                Icon(
+                                    painter = painterResource(id = navItem.icon),
+                                    contentDescription = navItem.label,
+                                    modifier = Modifier.size(21.dp)
+                                )
                             }
-                            Icon(
-                                painter = painterResource(id = navItem.icon),
-                                contentDescription = navItem.label,
-                                modifier = Modifier.size(21.dp)
-                            )
+
                         },
                         label = { Text(
                             navItem.label,
@@ -106,7 +110,6 @@ fun MainScreen(modifier: Modifier = Modifier, navHostController: NavHostControll
 fun ContentScreen(modifier: Modifier = Modifier,selectedIndex : Int, navHostController: NavHostController, postViewModel: PostViewModel) {
     when (selectedIndex) {
        0 -> HomePage(navHostController= navHostController, postViewModel = postViewModel)
-       // 0 -> HomePage(navHostController= navHostController)
         1 -> MyCommunity()
         2 -> Explore()
         3 -> Notifications()

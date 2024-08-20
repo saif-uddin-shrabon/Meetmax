@@ -40,8 +40,15 @@ import com.lilab.meetmax.ui.theme.LightColorScheme
 
 // Create Event Post
 @Composable
-fun CreatEventPostContent(textValue: String, onTextChager: (String) -> Unit = {}){
-    var isEnabled by remember { mutableStateOf(false) }
+fun CreatEventPostContent(
+    textValue: String,
+    titleOfHeadingEvent : String,
+    onTitleChange: (String) -> Unit = {},
+    onContentChange: (String) -> Unit = {}
+){
+    var isEnabledTitle by remember { mutableStateOf(false) }
+    var isEnabledContent by remember { mutableStateOf(false) }
+
 
 
 
@@ -59,14 +66,14 @@ fun CreatEventPostContent(textValue: String, onTextChager: (String) -> Unit = {}
                 .background(Color(0xFFF0F0F0), RoundedCornerShape(8.dp))
                 .padding(horizontal = 8.dp, vertical = 5.dp),
             hint = "Event Title",
-            value = textValue,
+            value = titleOfHeadingEvent,
             onValueChange = {
-                onTextChager(it)
-                isEnabled = true
+                onTitleChange(it)
+                isEnabledTitle = true
             },
 
             isEnabled = {
-                isEnabled = it
+                isEnabledTitle = it
             }
         )
 
@@ -80,12 +87,12 @@ fun CreatEventPostContent(textValue: String, onTextChager: (String) -> Unit = {}
             hint = "What's happening?",
             value = textValue,
             onValueChange = {
-                onTextChager(it)
-                isEnabled = true
+                onContentChange(it)
+                isEnabledContent = true
             },
 
             isEnabled = {
-                isEnabled = it
+                isEnabledContent = it
             }
         )
 
@@ -95,69 +102,9 @@ fun CreatEventPostContent(textValue: String, onTextChager: (String) -> Unit = {}
 
 
 
-//Heading Section of Create Event Post
-@Composable
-fun EventHeadingSectionOfCreatPost(navHostController: NavHostController){
-
-
-    Row (
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ){
-
-        Icon(
-            painter = painterResource(id = R.drawable.baseline_arrow_back_24),
-            contentDescription = "Arrow Back",
-            modifier = Modifier
-                .size(20.dp)
-                .clickable {
-                    navHostController.navigate(Destination.MainScreen) {
-                        popUpTo(Destination.MainScreen) {
-                            inclusive = true
-                        }
-                    }
-
-                }
-        )
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Text(
-            text = stringResource(id = R.string.creatEvent),
-            fontSize = 18.sp,
-            fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
-            color = LightColorScheme.tertiary
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        Text(
-            text = "Visible for",
-            fontSize = 12.sp,
-            color = Color.Gray
-        )
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-
-
-        PostTypeChangeDropdownMenu(
-            onOptionSelected = {
-
-            }
-
-        )
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-
-    }
-}
 
 @Preview(showBackground = true, heightDp = 640, widthDp = 360)
 @Composable
 fun CreatEventPostPreview(){
-    CreatEventPostContent(textValue = "Hello")
+    CreatEventPostContent(textValue = "Hello", titleOfHeadingEvent = "Event Title")
 }

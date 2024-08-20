@@ -12,4 +12,6 @@ data class PostData (
 
     val content : String,
     val image : String,
+    val title: String,
+    val postType: Boolean,
 )

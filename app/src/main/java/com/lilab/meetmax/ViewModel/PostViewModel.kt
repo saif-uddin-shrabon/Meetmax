@@ -18,9 +18,9 @@ class PostViewModel @Inject constructor(
 
     val postList : LiveData<List<PostData>> = creatPostRepository.todoList
 
-    fun uploadPost(content : String, image : String){
+    fun uploadPost(content : String, image : String, title: String, postType: Boolean){
        viewModelScope.launch {
-           creatPostRepository.uploadPost(content, image)
+           creatPostRepository.uploadPost(content, image, title, postType)
        }
     }
 

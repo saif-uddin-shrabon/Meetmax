@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.lilab.meetmax.services.model.PostData
 
-@Database(entities = [PostData::class], version = 2)
+@Database(entities = [PostData::class], version = 3)
 abstract class MeetLocalDatabase : RoomDatabase() {
     companion object{
         fun getInstance(context: Context) =

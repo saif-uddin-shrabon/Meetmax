@@ -95,6 +95,8 @@ fun CreatePostScreen(navHostController: NavHostController,postViewModel: PostVie
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var isLoading by remember { mutableStateOf(false) }
     var event by remember { mutableStateOf(false) }
+    var titleOfHeadingEvent by remember { mutableStateOf("") }
+    var titleOfHeading by remember { mutableStateOf("Creat a Post") }
 
 
      Column(
@@ -105,21 +107,25 @@ fun CreatePostScreen(navHostController: NavHostController,postViewModel: PostVie
             Spacer(modifier = Modifier.height(8.dp))
 
 
-         HeadingSectionOfCreatPost(navHostController,onEventChange = { event = it })
+         HeadingSectionOfCreatPost(navHostController,onEventChange = { event = it },titleOfHeading= titleOfHeading)
            CustomDevider()
          if (!event) {
+             titleOfHeading = "Creat a Post"
              PostContent(
                  navHostController,
                  textValue = textValue,
                  onTextChager = { textValue = it })
+
+             Spacer(modifier = Modifier.height(8.dp))
+             ActionPerformer(imageUri = imageUri, onImageSelected = { imageUri = it })
          }else{
-             CreatEventPostContent(textValue = textValue, onTextChager = { textValue = it })
+             titleOfHeading = "Creat an Event"
+             CreatEventPostContent(textValue = textValue,titleOfHeadingEvent = titleOfHeadingEvent, onTitleChange = { titleOfHeadingEvent = it }, onContentChange = { textValue = it })
          }
 
 
 
-            Spacer(modifier = Modifier.height(8.dp))
-            ActionPerformer(imageUri = imageUri, onImageSelected = { imageUri = it })
+
            Spacer(modifier = Modifier.height(18.dp) )
 
            AnimatedVisibility(!isLoading) {
@@ -134,7 +140,15 @@ fun CreatePostScreen(navHostController: NavHostController,postViewModel: PostVie
                  ),
                  onClick = {
                      Log.d("PostIMG", imageUri.toString())
-                    postViewModel.uploadPost(textValue, imageUri.toString())
+
+                     if (!event){
+                         postViewModel.uploadPost(textValue, imageUri.toString(), "", false)
+                     }else{
+                         postViewModel.uploadPost(textValue, "", titleOfHeadingEvent, true)
+                     }
+
+
+
 
                      // Clearing the text and image after post
                         textValue = ""
@@ -169,7 +183,7 @@ fun CreatePostScreen(navHostController: NavHostController,postViewModel: PostVie
 
 // Heading Section of Create Post
 @Composable
-fun HeadingSectionOfCreatPost(navHostController: NavHostController, onEventChange: (Boolean) -> Unit){
+fun HeadingSectionOfCreatPost(navHostController: NavHostController, onEventChange: (Boolean) -> Unit, titleOfHeading: String){
 
 
     Row (
@@ -197,7 +211,7 @@ fun HeadingSectionOfCreatPost(navHostController: NavHostController, onEventChang
         Spacer(modifier = Modifier.width(8.dp))
 
         Text(
-            text = "Creat a Post",
+            text = titleOfHeading,
             fontSize = 18.sp,
              fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
             color = LightColorScheme.tertiary

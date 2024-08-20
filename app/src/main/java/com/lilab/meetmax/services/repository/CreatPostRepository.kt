@@ -17,8 +17,8 @@ class CreatPostRepository @Inject constructor(
     val todoList : LiveData<List<PostData>> = _todoList
 
 
-    suspend fun uploadPost(content : String, image : String){
-        meetLocalDatabase.postDao().insertPost(PostData(content = content, image = image))
+    suspend fun uploadPost(content : String, image : String, title: String, postType: Boolean){
+        meetLocalDatabase.postDao().insertPost(PostData(content = content, image = image, title = title, postType = postType))
     }
 
     fun getAllPosts(){
