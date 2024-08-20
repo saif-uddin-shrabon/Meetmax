@@ -39,6 +39,7 @@ import androidx.navigation.compose.rememberNavController
 import com.lilab.meetmax.Pages.AppComponent.NoPostFound
 import com.lilab.meetmax.Pages.AppComponent.PostItem
 import com.lilab.meetmax.Pages.AppComponent.PostSectionCard
+import com.lilab.meetmax.Pages.AppComponent.SotrySection
 import com.lilab.meetmax.Pages.AppComponent.StoryComponent
 import com.lilab.meetmax.Pages.AppComponent.ToolbarSection
 import com.lilab.meetmax.Pages.AppComponent.WarningDialog
@@ -66,7 +67,6 @@ fun HomePage(modifier: Modifier = Modifier, navHostController: NavHostController
 
     var ShowPost by remember { mutableStateOf(false) }
 
-    println("User Pref ID 2: ${SharedPref.getUserId(LocalContext.current)}")
 
 
     // Count of posts
@@ -89,12 +89,9 @@ fun HomePage(modifier: Modifier = Modifier, navHostController: NavHostController
              LazyColumn {
                     item{
                         ToolbarSection()
+                        Spacer(modifier = Modifier.height(7.dp))
 
-                        LazyRow {
-                            items(10) {
-                                StoryComponent("https://picsum.photos/200/300")
-                            }
-                        }
+                        SotrySection()
 
                         Spacer(modifier = Modifier.height(7.dp))
                         PostSectionCard(navHostController)
@@ -143,37 +140,7 @@ fun HomePage(modifier: Modifier = Modifier, navHostController: NavHostController
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SearchBar(){
 
-
-        OutlinedTextField(
-            modifier = Modifier
-                .height(50.dp)
-                .width(250.dp),
-            value = "",
-            onValueChange = {},
-            leadingIcon = {
-                Image(
-                    painter = painterResource(id = R.drawable.search),
-                    contentDescription = "Search Icon",
-                    Modifier.size(18.dp)
-                )
-            },
-            placeholder = {
-                Text(
-
-                    text = stringResource(id = R.string.SearchPlaceholder),
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Center,
-                )
-            },
-
-        )
-
-
-
-}
 
 @Preview(showBackground = true,  widthDp = 360, heightDp = 640, apiLevel = 33)
 @Composable

@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -36,11 +37,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.lilab.meetmax.Pages.AdaptiveScreen.WindowType
+import com.lilab.meetmax.Pages.AdaptiveScreen.rememberAdaptiveScreenSize
 import com.lilab.meetmax.R
 import com.lilab.meetmax.ui.theme.LightColorScheme
 
 @Composable
 fun PostItem(content: String, image: String?) {
+    val windowSize = rememberAdaptiveScreenSize()
          Surface(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -54,10 +58,22 @@ fun PostItem(content: String, image: String?) {
              ) {
 
                  UserDetails()
-                 PostContetnt(content = content, Image = image)
-                 ReactionsSection()
-                 ActionPerpormer()
-                 Comments()
+                 when(windowSize.width){
+                     WindowType.Compact -> {
+                         PostContetnt(content = content, Image = image)
+                         ReactionsSection()
+                         ActionPerpormer()
+                         Comments()
+
+                     }
+                    else -> {
+                        MiediumToExpandedPostContent(content = content, Image = image)
+                        ReactionsSection()
+                        ActionPerpormer()
+                        MedioumToExpandCommentsSection()
+                    }
+                 }
+
 
 
 
@@ -138,6 +154,38 @@ private fun PostContetnt( content : String, Image: String?) {
             .size(200.dp, 200.dp)
             .clip(RoundedCornerShape(8.dp))
         )
+}
+
+
+@Composable
+private fun MiediumToExpandedPostContent( content : String, Image: String?) {
+
+    Spacer(modifier = Modifier.height(4.dp))
+    val imageUri = Uri.parse(Image)
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        Image(
+            painter = rememberAsyncImagePainter(imageUri),
+            contentDescription = "profile",
+
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .size(150.dp, 150.dp)
+                .clip(RoundedCornerShape(8.dp))
+        )
+        Spacer(modifier = Modifier.width(10.dp))
+        Text(
+            // text = "If you think adventure is dangerous, try routine, it’s lethal Paulo Coelho! Good morning all friends.",
+            text = content,
+            fontFamily = FontFamily(Font(R.font.robotoregular, FontWeight.Normal)),
+            fontSize = 16.sp,
+            color = LightColorScheme.tertiary
+        )
+    }
 }
 
 @Composable
@@ -226,6 +274,8 @@ fun ActionPerpormer(){
 @Composable
 fun Comments(){
 
+
+
     Row (
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -236,35 +286,35 @@ fun Comments(){
             painter = painterResource(id = R.drawable.profile), // Replace with your profile image resource
             contentDescription = "Profile Picture",
             modifier = Modifier
-                .size(35.dp)
+                .size(30.dp)
                 .clip(CircleShape)
         )
 
+        Spacer(modifier = Modifier.width(8.dp))
 
-        Box(
-            modifier = Modifier
-                .height(45.dp)
-                .wrapContentWidth()
-                .background(LightColorScheme.background, RoundedCornerShape(10.dp))
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-                .align(Alignment.CenterVertically),
-        ) {
+
 
             Row(
+                modifier = Modifier
+                    .height(45.dp)
+                    .weight(1f)
+                    .background(LightColorScheme.background, RoundedCornerShape(10.dp))
+                    .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 5.dp),
                 verticalAlignment = Alignment.CenterVertically,
-            ) {
+
+                ) {
                 BasicTextField(
                     value = "",
                     onValueChange = {},
                     singleLine = true,
+                    modifier = Modifier.weight(1f),
 
                     decorationBox = { innerTextField ->
                         Text(
                             text = "Write a comment...",
                             color = Color.Gray,
-
-
-                        )
+                            fontSize = 10.sp
+                            )
 
                         innerTextField()
                     },
@@ -272,47 +322,49 @@ fun Comments(){
 
                     )
 
-                Spacer(modifier =  Modifier.width(8.dp) )
+                Spacer(modifier = Modifier.width(8.dp) )
 
-                Icon(
-                    painter = painterResource(id = R.drawable.gif),
-                    contentDescription = "Send",
-                    modifier = Modifier.size(20.dp),
-                    tint = Color.Gray
-                )
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Spacer(modifier =  Modifier.width(8.dp) )
 
-                Spacer(modifier =  Modifier.width(8.dp) )
-                Icon(
-                    painter = painterResource(id = R.drawable.picture),
-                    contentDescription = "Send",
-                    modifier = Modifier.size(20.dp),
-                    tint = Color.Gray
-                )
-                Spacer(modifier =  Modifier.width(8.dp) )
-                Icon(
-                    painter = painterResource(id = R.drawable.smile),
-                    contentDescription = "Send",
-                    modifier = Modifier.size(20.dp),
-                    tint = Color.Gray
-                )
+                    Icon(
+                        painter = painterResource(id = R.drawable.gif),
+                        contentDescription = "Send",
+                        modifier = Modifier.size(20.dp),
+                        tint = Color.Gray
+                    )
+
+                    Spacer(modifier =  Modifier.width(8.dp) )
+                    Icon(
+                        painter = painterResource(id = R.drawable.picture),
+                        contentDescription = "Send",
+                        modifier = Modifier.size(20.dp),
+                        tint = Color.Gray
+                    )
+                    Spacer(modifier =  Modifier.width(8.dp) )
+                    Icon(
+                        painter = painterResource(id = R.drawable.smile),
+                        contentDescription = "Send",
+                        modifier = Modifier.size(20.dp),
+                        tint = Color.Gray
+                    )
+                }
             }
 
 
+        Spacer(modifier = Modifier.width(8.dp))
 
-
-
-        }
-
-        Box(
-            modifier = Modifier
-                .height(45.dp)
-                .width(45.dp)
-                .background(Color(0x2A377DFF), RoundedCornerShape(10.dp))
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-        ) {
             IconButton(
                 onClick = { },
-                modifier = Modifier.size(30.dp),
+                modifier = Modifier
+                    .height(45.dp)
+                    .width(45.dp)
+                    .background(Color(0x2A377DFF), RoundedCornerShape(10.dp))
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
 
                 ) {
                 Icon(
@@ -321,7 +373,113 @@ fun Comments(){
                     tint = Color(0xFF377DFF),
                 )
             }
-        }
+
+
+    }
+
+}
+
+@Composable
+fun MedioumToExpandCommentsSection(){
+
+    Row (
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth()
+    ){
+
+        Image(
+            painter = painterResource(id = R.drawable.profile),
+            contentDescription = "Profile Picture",
+            modifier = Modifier
+                .size(35.dp)
+                .clip(CircleShape)
+        )
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+            Row(
+                modifier = Modifier
+                    .height(45.dp)
+                    .weight(1f)
+                    .background(LightColorScheme.background, RoundedCornerShape(10.dp))
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+
+            ) {
+                BasicTextField(
+                    value = "",
+                    onValueChange = {},
+                    singleLine = true,
+                    modifier = Modifier.weight(1f),
+
+                    decorationBox = { innerTextField ->
+                        Text(
+                            text = "Write a comment...",
+                            color = Color.Gray,
+
+
+                            )
+
+                        innerTextField()
+                    },
+
+
+                    )
+
+                Spacer(modifier = Modifier.width(8.dp) )
+
+               Row(
+                   modifier = Modifier.weight(1f),
+                     verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.End
+               ) {
+                   Spacer(modifier =  Modifier.width(8.dp) )
+
+                   Icon(
+                       painter = painterResource(id = R.drawable.gif),
+                       contentDescription = "Send",
+                       modifier = Modifier.size(20.dp),
+                       tint = Color.Gray
+                   )
+
+                   Spacer(modifier =  Modifier.width(8.dp) )
+                   Icon(
+                       painter = painterResource(id = R.drawable.picture),
+                       contentDescription = "Send",
+                       modifier = Modifier.size(20.dp),
+                       tint = Color.Gray
+                   )
+                   Spacer(modifier =  Modifier.width(8.dp) )
+                   Icon(
+                       painter = painterResource(id = R.drawable.smile),
+                       contentDescription = "Send",
+                       modifier = Modifier.size(20.dp),
+                       tint = Color.Gray
+                   )
+               }
+            }
+
+
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+            IconButton(
+                onClick = { },
+                modifier = Modifier
+                    .height(45.dp)
+                    .width(45.dp)
+                    .background(Color(0x2A377DFF), RoundedCornerShape(10.dp))
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+
+                ) {
+                Icon(
+                    painter = painterResource(R.drawable.send),
+                    contentDescription = "Send",
+                    tint = Color(0xFF377DFF),
+                )
+            }
+
 
     }
 
@@ -331,9 +489,8 @@ fun Comments(){
 
 
 
-
-@Preview(showBackground = true, heightDp = 640, widthDp = 360)
+@Preview(showBackground = true, heightDp = 640, widthDp = 640)
 @Composable
 fun PostItemPreview() {
-    //PostItem()
+    PostItem( content = "If you think adventure is dangerous, try routine, it’s lethal Paulo Coelho! Good morning all friends.", image = "https://images.unsplash.com/photo-1634170380004-4b3b3b3b3b3b")
 }

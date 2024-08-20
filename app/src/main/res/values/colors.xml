@@ -12,4 +12,5 @@
     <color name="containerbackground">#FFFFFF</color>
     <color name="textColor">#4E5D78</color>
     <color name="textColorSecondary">#4E9DADBF</color>
+    <color name="borderColor">#4E5D7866</color>
 </resources>

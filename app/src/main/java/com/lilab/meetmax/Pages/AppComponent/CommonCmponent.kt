@@ -4,9 +4,11 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +30,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -37,6 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -45,13 +49,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lilab.meetmax.Pages.MainPages.SearchBar
 import com.lilab.meetmax.R
-import com.lilab.meetmax.services.domain.AuthEvents
-import com.lilab.meetmax.ui.theme.IconDark
 import com.lilab.meetmax.ui.theme.LightColorScheme
-import com.lilab.meetmax.ui.theme.textColor
 
+
+
+// Header Section
 @Composable
 fun Header(){
     Row(
@@ -125,7 +128,7 @@ fun Header(){
 }
 
 
-
+// Static Section are used for Login and Signup
 @Composable
 fun StaticSection(title: String, subtitle: String, newlineTex : String){
 
@@ -323,37 +326,80 @@ fun ToolbarSection() {
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        Spacer(modifier = Modifier.width(5.dp))
+        Spacer(modifier = Modifier.width(8.dp))
 
-        Box(
-            contentAlignment = Alignment.Center
-        ) {
+
             Image(
                 painter = painterResource(id = R.drawable.profile),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(45.dp)
                     .clip(CircleShape)
             )
+        Spacer(modifier = Modifier.width(5.dp))
+
+        Row(
+            modifier = Modifier
+                .height(45.dp)
+                .weight(1f)
+                .background(Color.White)
+                .border(1.dp, colorResource(id = R.color.borderColor), RoundedCornerShape(10.dp)),
+
+            verticalAlignment = Alignment.CenterVertically,
+
+            ) {
+
+            Row(
+                modifier = Modifier.padding(start = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End
+            ) {
+
+                Icon(
+                    painter = painterResource(id = R.drawable.search),
+                    contentDescription = "Send",
+                    modifier = Modifier.size(20.dp),
+                    tint = Color.Gray
+                )
+
+            }
+            Spacer(modifier = Modifier.width(8.dp) )
+            BasicTextField(
+                value = "",
+                onValueChange = {},
+                singleLine = true,
+                modifier = Modifier.weight(1f),
+
+                decorationBox = { innerTextField ->
+                    Text(
+                        text = "Write a comment...",
+                        color = Color.Gray,
+
+
+                        )
+
+                    innerTextField()
+                },
+
+
+                )
+
+
+
 
         }
-        SearchBar()
 
-        Box(
-            contentAlignment = Alignment.Center
-        ) {
+        Spacer(modifier = Modifier.width(5.dp) )
             Image(
                 painter = painterResource(id = R.drawable.message),
                 contentDescription = "Angle Down Icon",
                 Modifier
-                    .size(24.dp)
+                    .size(30.dp)
+
 
             )
 
-        }
-
         Spacer(modifier = Modifier.width(5.dp))
-
 
     }
 }
@@ -509,8 +555,10 @@ fun HeaderLayout() {
 
    // StaticSection(title = "Login", subtitle ="Hello", newlineTex ="welcome")
 
-   // Header()
+  //  Header()
     //NoPostFound()
 
-    WarningDialog(title = "Warning", message = "Are you sure you want to delete this post?",  onConfirm = {})
+    ToolbarSection()
+
+   // WarningDialog(title = "Warning", message = "Are you sure you want to delete this post?",  onConfirm = {})
 }

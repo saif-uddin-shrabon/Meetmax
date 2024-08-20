@@ -26,7 +26,6 @@ class MainActivity : ComponentActivity() {
            MeetmaxTheme {
                Surface {
                    val navController = rememberNavController()
-                   println("User Pref ID: ${getUserId(this)}")
                    if (getUserId(this) != "") {
                        MainNavigation(authViewModel = authViewModel, postViewModel = postViewModel, navController = navController, startDestination = Destination.MainScreen )
                    } else {

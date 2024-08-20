@@ -1,5 +1,6 @@
 package com.lilab.meetmax.Pages.AppComponent
 
+import android.service.autofill.OnClickAction
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -56,7 +57,12 @@ fun PostSectionCard(navHostController: NavHostController){
 
    val shape = CircleShape
     var text by remember { mutableStateOf("") }
-    Box(modifier = Modifier.background(Color.White)) {
+    Box(
+        modifier = Modifier.background(Color.White).clickable {
+            navHostController.navigate(Destination.CreatPost)
+        }
+    )
+    {
 
 
         Column(
@@ -86,7 +92,7 @@ fun PostSectionCard(navHostController: NavHostController){
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                         .clickable {
 
-                                navHostController.navigate(Destination.CreatPost)
+                               navHostController.navigate(Destination.CreatPost)
                         }
 
                 ) {
@@ -201,7 +207,9 @@ fun PostSectionCard(navHostController: NavHostController){
                         contentColor = Color.White
                     ),
 
-                    onClick = { },
+                    onClick = {
+                              navHostController.navigate(Destination.CreatPost)
+                    },
                 ) {
 
                     Text(
