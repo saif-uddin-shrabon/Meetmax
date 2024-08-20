@@ -3,4 +3,6 @@
     <string name="forget_password">Forget Password?</string>
     <string name="forget_password_desc">Enter your email details to receive a reset link</string>
     <string name="SearchPlaceholder">Search for something here…</string>
+    <string name="eventheading">Recent Event</string>
+    <string name="creatEvent">Create Event</string>
 </resources>

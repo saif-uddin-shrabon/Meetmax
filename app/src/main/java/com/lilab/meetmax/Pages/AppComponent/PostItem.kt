@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -129,7 +130,7 @@ fun UserDetails(){
 }
 
 @Composable
-private fun PostContetnt( content : String, Image: String?) {
+ fun PostContetnt( content : String, Image: String?) {
 
     Spacer(modifier = Modifier.height(4.dp))
     val imageUri = Uri.parse(Image)
@@ -158,7 +159,7 @@ private fun PostContetnt( content : String, Image: String?) {
 
 
 @Composable
-private fun MiediumToExpandedPostContent( content : String, Image: String?) {
+fun MiediumToExpandedPostContent( content : String, Image: String?) {
 
     Spacer(modifier = Modifier.height(4.dp))
     val imageUri = Uri.parse(Image)
@@ -174,7 +175,8 @@ private fun MiediumToExpandedPostContent( content : String, Image: String?) {
 
             modifier = Modifier
                 .padding(vertical = 8.dp)
-                .size(150.dp, 150.dp)
+                .weight(1f)
+                .height(200.dp)
                 .clip(RoundedCornerShape(8.dp))
         )
         Spacer(modifier = Modifier.width(10.dp))
@@ -183,13 +185,15 @@ private fun MiediumToExpandedPostContent( content : String, Image: String?) {
             text = content,
             fontFamily = FontFamily(Font(R.font.robotoregular, FontWeight.Normal)),
             fontSize = 16.sp,
-            color = LightColorScheme.tertiary
+            color = LightColorScheme.tertiary,
+            modifier = Modifier.weight(1f)
+
         )
     }
 }
 
 @Composable
-private fun ReactionsSection() {
+fun ReactionsSection() {
     Spacer(modifier = Modifier.height(8.dp))
 
     Row(

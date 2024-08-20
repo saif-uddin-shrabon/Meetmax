@@ -10,14 +10,14 @@ object StoryRepository {
     private val sotries = mutableStateOf<List<StoryData>>(emptyList())
 
     val _stories = ArrayList<StoryData>()
-
     private fun populateStories() {
 
-        (0..9).forEach { index ->
+        (0..20).forEach { index ->
             val story = StoryData(
                 image = "https://randomuser.me/api/portraits/men/${index + 1}.jpg",
                 name = names[index]
             )
+
             _stories.add(story)
         }
 

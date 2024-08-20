@@ -43,6 +43,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -52,7 +53,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.lilab.meetmax.Pages.AppComponent.BasicTextFiledWithHint
+import com.lilab.meetmax.Pages.AppComponent.CreatEventPostContent
+import com.lilab.meetmax.Pages.AppComponent.CustomDevider
 import com.lilab.meetmax.Pages.AppComponent.MediaSelector
+import com.lilab.meetmax.Pages.AppComponent.PostTypeChangeDropdownMenu
 import com.lilab.meetmax.Pages.AppComponent.ToolbarSection
 import com.lilab.meetmax.Pages.Navigation.Destination
 import com.lilab.meetmax.R
@@ -65,20 +69,20 @@ import com.lilab.meetmax.ui.theme.LightColorScheme
 fun CreatPost(navHostController: NavHostController,postViewModel: PostViewModel) {
 
 
-
     Surface(
 
         modifier = Modifier.fillMaxSize()
     ) {
        Column(
-              modifier = Modifier.fillMaxSize()
+              modifier = Modifier
+                  .fillMaxSize()
                   .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.Top,
               horizontalAlignment = Alignment.CenterHorizontally
        ) {
            ToolbarSection()
 
-           CreatePostScreen(navHostController,postViewModel)
+           CreatePostScreen(navHostController, postViewModel)
        }
     }
 }
@@ -86,9 +90,11 @@ fun CreatPost(navHostController: NavHostController,postViewModel: PostViewModel)
 @Composable
 fun CreatePostScreen(navHostController: NavHostController,postViewModel: PostViewModel){
 
+
     var textValue by remember { mutableStateOf("") }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var isLoading by remember { mutableStateOf(false) }
+    var event by remember { mutableStateOf(false) }
 
 
      Column(
@@ -97,15 +103,21 @@ fun CreatePostScreen(navHostController: NavHostController,postViewModel: PostVie
             horizontalAlignment = Alignment.CenterHorizontally
      ) {
             Spacer(modifier = Modifier.height(8.dp))
-            HeadingSectionOfCreatPost(navHostController)
 
-             Divider(
-                 color = Color.Gray,
-                 thickness = 1.dp,
-                 modifier = Modifier.fillMaxWidth()
-             )
-            Spacer(modifier = Modifier.height(15.dp))
-            PostContent(textValue = textValue, onTextChager = { textValue = it })
+
+         HeadingSectionOfCreatPost(navHostController,onEventChange = { event = it })
+           CustomDevider()
+         if (!event) {
+             PostContent(
+                 navHostController,
+                 textValue = textValue,
+                 onTextChager = { textValue = it })
+         }else{
+             CreatEventPostContent(textValue = textValue, onTextChager = { textValue = it })
+         }
+
+
+
             Spacer(modifier = Modifier.height(8.dp))
             ActionPerformer(imageUri = imageUri, onImageSelected = { imageUri = it })
            Spacer(modifier = Modifier.height(18.dp) )
@@ -122,7 +134,7 @@ fun CreatePostScreen(navHostController: NavHostController,postViewModel: PostVie
                  ),
                  onClick = {
                      Log.d("PostIMG", imageUri.toString())
-                     postViewModel.uploadPost(textValue, imageUri.toString())
+                    postViewModel.uploadPost(textValue, imageUri.toString())
 
                      // Clearing the text and image after post
                         textValue = ""
@@ -155,8 +167,9 @@ fun CreatePostScreen(navHostController: NavHostController,postViewModel: PostVie
 
 }
 
+// Heading Section of Create Post
 @Composable
-fun HeadingSectionOfCreatPost(navHostController: NavHostController){
+fun HeadingSectionOfCreatPost(navHostController: NavHostController, onEventChange: (Boolean) -> Unit){
 
 
     Row (
@@ -200,30 +213,15 @@ fun HeadingSectionOfCreatPost(navHostController: NavHostController){
 
         Spacer(modifier = Modifier.width(8.dp))
 
+        PostTypeChangeDropdownMenu(
+            onOptionSelected = {
 
-            Row(
-                modifier = Modifier
-                    .height(32.dp)
-                    .width(80.dp)
-                    .background(LightColorScheme.background, RoundedCornerShape(8.dp)),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Friends",
-                    fontSize = 12.sp,
-                    fontFamily = FontFamily(Font(R.font.rmedium, FontWeight.Medium)),
-                    color = LightColorScheme.secondary,
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Icon(
-                    painter = painterResource(id = R.drawable.angle_down),
-                    contentDescription = "Arrow Down",
-                    modifier = Modifier
-                        .size(12.dp)
-                )
-
+                onEventChange(it)
             }
+
+        )
+
+
 
         Spacer(modifier = Modifier.width(8.dp))
 
@@ -232,48 +230,52 @@ fun HeadingSectionOfCreatPost(navHostController: NavHostController){
 }
 
 
-
+// Post Content
 @Composable
-fun PostContent(textValue: String, onTextChager: (String) -> Unit = {}){
+fun PostContent(navHostController: NavHostController,textValue: String, onTextChager: (String) -> Unit = {}){
     var isEnabled by remember { mutableStateOf(false) }
 
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
 
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.profile),
-            contentDescription = "profile",
-            modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-        )
-
-        Spacer(modifier = Modifier.width(8.dp))
-        BasicTextFiledWithHint(
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(100.dp)
-                .background(Color(0xFFF0F0F0), RoundedCornerShape(8.dp))
-                .padding(horizontal = 8.dp, vertical = 5.dp),
-            hint = "What's happening?",
-            value = textValue,
-            onValueChange = {
-                onTextChager(it)
-                isEnabled = true
-            },
 
-            isEnabled = {
-                isEnabled = it
-            }
-        )
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.profile),
+                contentDescription = "profile",
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+            BasicTextFiledWithHint(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    .background(Color(0xFFF0F0F0), RoundedCornerShape(8.dp))
+                    .padding(horizontal = 8.dp, vertical = 5.dp),
+                hint = "What's happening?",
+                value = textValue,
+                onValueChange = {
+                    onTextChager(it)
+                    isEnabled = true
+                },
+
+                isEnabled = {
+                    isEnabled = it
+                }
+            )
 
 
-    }
+        }
+
+
 }
+
 
 
 @Composable
@@ -326,5 +328,5 @@ fun ActionPerformer(
 @Composable
 fun CreatPostPreview() {
     val mockNavController = rememberNavController()
-  //  CreatPost(mockNavController, PostViewModel())
+    //CreatPost(mockNavController)
 }

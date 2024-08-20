@@ -545,6 +545,13 @@ fun WarningDialog(
 
 
 
+//Devider
+@Composable
+fun CustomDevider(){
+    Spacer(modifier = Modifier.height(8.dp))
+    Divider(color = Color.LightGray, thickness = 1.dp)
+    Spacer(modifier = Modifier.height(8.dp))
+}
 
 @Preview(showBackground = true, widthDp = 360, heightDp = 640)
 @Composable

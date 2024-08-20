@@ -110,6 +110,7 @@ fun HomePage(modifier: Modifier = Modifier, navHostController: NavHostController
                                  content = it1.content,
                                  image = posts!![index].image
                              )
+
                          }
 
                      }
